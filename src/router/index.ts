@@ -1,25 +1,48 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
-import { ref } from 'vue';
-import MetacatTable from '../components/MetacatTable.vue';
+import { createRouter, createWebHashHistory } from "vue-router";
+import { ref } from "vue";
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: MetacatTable,
+    path: "/",
+    name: "Home",
+    component: () => import("../components/Home.vue"),
     meta: {
-      title: 'ACCESS-NRI Intake',
-    },
-  },
-  {
-    path: '/datastore/:name',
-    name: 'DatastoreDetail',
-    component: () => import('../components/DatastoreDetail.vue'),
-    meta: {
-      title: 'ESM Datastore Details',
+      title: "Home",
     },
   },
   // Future routes can be added here
+  {
+    path: "/blog",
+    name: "Blog",
+    component: () => import("../components/Blog.vue"),
+    meta: {
+      title: "Blog",
+    },
+  },
+  {
+    path: "/projects",
+    name: "Projects",
+    component: () => import("../components/Projects.vue"),
+    meta: {
+      title: "Projects",
+    },
+  },
+  {
+    path: "/contact",
+    name: "Contact",
+    component: () => import("../components/Contact.vue"),
+    meta: {
+      title: "Contact",
+    },
+  },
+  {
+    path: "/about",
+    name: "About",
+    component: () => import("../components/AboutMe.vue"),
+    meta: {
+      title: "About Me",
+    },
+  }
 ];
 
 const router = createRouter({
