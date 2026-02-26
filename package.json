@@ -14,6 +14,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@highlightjs/vue-plugin": "^2.1.0",
     "@primeuix/themes": "^2.0.3",
     "@primevue/forms": "^4.5.4",

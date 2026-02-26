@@ -19,9 +19,9 @@ import hljsVuePlugin from "@highlightjs/vue-plugin";
 
 // OhVueIcons
 import { OhVueIcon, addIcons } from "oh-vue-icons";
-import {ViFileTypePython, ViFileTypeJulia, ViFileTypeRust, ViFileTypeVue, ViFileTypeTypescript, BiGithub} from "oh-vue-icons/icons"
+import {ViFileTypePython, ViFileTypeJulia, ViFileTypeRust, ViFileTypeVue, ViFileTypeTypescript, BiGithub, BiLinkedin} from "oh-vue-icons/icons"
 
-addIcons(ViFileTypePython, ViFileTypeJulia, ViFileTypeRust, ViFileTypeVue, ViFileTypeTypescript, BiGithub);
+addIcons(ViFileTypePython, ViFileTypeJulia, ViFileTypeRust, ViFileTypeVue, ViFileTypeTypescript, BiGithub, BiLinkedin);
 
 hljs.registerLanguage("python", python);
 
