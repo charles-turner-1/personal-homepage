@@ -19,6 +19,14 @@
         label="Connect on LinkedIn"
         icon-class="text-[#0A66C2]"
       />
+      <ContactCard
+        href="https://forum.access-hive.org.au/u/charlesturner/"
+        img="/icons/hive.png"
+        platform="Hive-Forum"
+        label="ACCESS-Hive Forum"
+        icon-class="text-[#0A66C2]"
+      />
+      
     </div>
 
     <div class="flex items-center gap-4 my-10 max-w-lg mx-auto">
