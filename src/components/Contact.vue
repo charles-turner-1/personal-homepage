@@ -21,10 +21,9 @@
       />
       <ContactCard
         href="https://forum.access-hive.org.au/u/charlesturner/"
-        img="/icons/hive.png"
+        :img="hiveIcon"
         platform="Hive-Forum"
         label="ACCESS-Hive Forum"
-        icon-class="text-[#0A66C2]"
       />
       
     </div>
@@ -42,4 +41,5 @@
 <script setup lang="ts">
   import ContactCard from './ContactCard.vue';
   import ContactForm from './ContactForm.vue';
+  import hiveIcon from '../assets/hive.png';
 </script>
