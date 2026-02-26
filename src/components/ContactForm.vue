@@ -67,13 +67,13 @@ async function handleSubmit() {
         from_email: form.email,
         message: form.message,
       },
-      import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+      { publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY },
     );
     status.value = 'success';
     form.name = '';
     form.email = '';
     form.message = '';
-  } catch {
+  } catch (error) {
     status.value = 'error';
   } finally {
     loading.value = false;
