@@ -4,7 +4,7 @@ import { isNavigating } from "./router";
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
     <!-- Navigation Loading Overlay -->
     <Transition name="fade">
       <div
@@ -23,8 +23,13 @@ import { isNavigating } from "./router";
         </div>
       </div>
     </Transition>
-    <Header/>
-    <RouterView />
+    <div class="w-full">
+      <Header/>
+    </div>
+
+    <div>
+    <RouterView class="w-full"/>
+    </div>
   </div>
 </template>
 

@@ -42,7 +42,7 @@ const routes = [
     meta: {
       title: "About Me",
     },
-  }
+  },
 ];
 
 const router = createRouter({
