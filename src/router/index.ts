@@ -43,6 +43,22 @@ const routes = [
       title: "About Me",
     },
   },
+  {
+    path: "/projects/interactive-data-explorer",
+    name: "InteractiveDataExplorer",
+    component: () => import("../components/InteractiveDataExplorer.vue"),
+    meta: {
+      title: "Interactive Data Explorer",
+    },
+  },
+  {
+    path: "/projects/interactive-glodap-catalog",
+    name: "InteractiveGLODAPCatalog",
+    component: () => import("../glodap-viewer/InteractiveGLODAPCatalog.vue"),
+    meta: {
+      title: "Interactive GLODAP Catalog",
+    },
+  },
 ];
 
 const router = createRouter({
