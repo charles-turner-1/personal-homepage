@@ -60,13 +60,13 @@ const routes = [
     },
   },
   {
-    "path": "/projects/zarr-data-streamer",
-    "name": "ZarrDataStreamer",
+    path: "/projects/zarr-data-streamer",
+    name: "ZarrDataStreamer",
     component: () => import("../components/ZarrDataStreamer.vue"),
     meta: {
       title: "Zarr Data Streamer",
     },
-  }
+  },
 ];
 
 const router = createRouter({

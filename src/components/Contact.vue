@@ -1,8 +1,13 @@
 <template>
   <div class="container mx-auto px-6 py-16">
     <div class="text-center mb-10">
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-3">Get in touch</h1>
-      <p class="text-gray-500 dark:text-gray-400 max-w-md mx-auto">Whether it's a project, a question, or just to say hi — feel free to reach out.</p>
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-3">
+        Get in touch
+      </h1>
+      <p class="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
+        Whether it's a project, a question, or just to say hi — feel free to
+        reach out.
+      </p>
     </div>
     <div class="flex justify-center gap-6">
       <ContactCard
@@ -25,12 +30,13 @@
         platform="Hive-Forum"
         label="ACCESS-Hive Forum"
       />
-      
     </div>
 
     <div class="flex items-center gap-4 my-10 max-w-lg mx-auto">
       <div class="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
-      <span class="text-sm text-gray-400 dark:text-gray-500 whitespace-nowrap">or send a message</span>
+      <span class="text-sm text-gray-400 dark:text-gray-500 whitespace-nowrap"
+        >or send a message</span
+      >
       <div class="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
     </div>
 
@@ -39,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-  import ContactCard from './ContactCard.vue';
-  import ContactForm from './ContactForm.vue';
-  import hiveIcon from '../assets/hive.png';
+import ContactCard from "./ContactCard.vue";
+import ContactForm from "./ContactForm.vue";
+import hiveIcon from "../assets/hive.png";
 </script>

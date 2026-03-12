@@ -24,11 +24,11 @@ import { isNavigating } from "./router";
       </div>
     </Transition>
     <div class="w-full">
-      <Header/>
+      <Header />
     </div>
 
     <div>
-    <RouterView class="w-full"/>
+      <RouterView class="w-full" />
     </div>
   </div>
 </template>

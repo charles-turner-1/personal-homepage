@@ -1,14 +1,14 @@
-import { ref, onUnmounted } from 'vue';
-import * as duckdb from '@duckdb/duckdb-wasm';
-import duckdb_wasm from '@duckdb/duckdb-wasm/dist/duckdb-mvp.wasm?url';
-import mvp_worker from '@duckdb/duckdb-wasm/dist/duckdb-browser-mvp.worker.js?url';
+import { ref, onUnmounted } from "vue";
+import * as duckdb from "@duckdb/duckdb-wasm";
+import duckdb_wasm from "@duckdb/duckdb-wasm/dist/duckdb-mvp.wasm?url";
+import mvp_worker from "@duckdb/duckdb-wasm/dist/duckdb-browser-mvp.worker.js?url";
 
 export type GlodapRow = Record<string, string | number | null>;
 
 const GLODAP_URL =
-  'https://object-store.rc.nectar.org.au/v1/AUTH_685340a8089a4923a71222ce93d5d323/glodap-test/GLODAPv2.2023_Merged_Master_File.parquet';
+  "https://object-store.rc.nectar.org.au/v1/AUTH_685340a8089a4923a71222ce93d5d323/glodap-test/GLODAPv2.2023_Merged_Master_File.parquet";
 
-const FILE_NAME = 'GLODAPv2.2023_Merged_Master_File.parquet';
+const FILE_NAME = "GLODAPv2.2023_Merged_Master_File.parquet";
 
 const DUCKDB_BUNDLES: duckdb.DuckDBBundles = {
   mvp: {
@@ -23,11 +23,11 @@ const DUCKDB_BUNDLES: duckdb.DuckDBBundles = {
  */
 function coerceValue(value: unknown): string | number | null {
   if (value === null || value === undefined) return null;
-  if (typeof value === 'bigint') return Number(value);
-  if (typeof value === 'number') return value;
-  if (typeof value === 'string') return value;
+  if (typeof value === "bigint") return Number(value);
+  if (typeof value === "number") return value;
+  if (typeof value === "string") return value;
   const prim = (value as any)?.valueOf?.();
-  if (typeof prim === 'number' || typeof prim === 'string') return prim;
+  if (typeof prim === "number" || typeof prim === "string") return prim;
   return String(value);
 }
 
@@ -42,7 +42,7 @@ function coerceValue(value: unknown): string | number | null {
  * the component is unmounted.
  */
 /** String-typed columns that need quoted IN clauses rather than numeric ones. */
-const STRING_FILTER_COLUMNS = new Set(['G2expocode', 'G2doi']);
+const STRING_FILTER_COLUMNS = new Set(["G2expocode", "G2doi"]);
 
 export function useGlodapData() {
   const rows = ref<GlodapRow[]>([]);
@@ -54,27 +54,34 @@ export function useGlodapData() {
   let conn: duckdb.AsyncDuckDBConnection | null = null;
   let initPromise: Promise<void> | null = null;
 
-  function buildWhere(search: string, filters: Record<string, string[]> = {}): string {
+  function buildWhere(
+    search: string,
+    filters: Record<string, string[]> = {},
+  ): string {
     const clauses: string[] = [];
     if (search.trim()) {
       const escaped = search.replace(/'/g, "''");
-      clauses.push(`(G2expocode ILIKE '%${escaped}%' OR G2doi ILIKE '%${escaped}%')`);
+      clauses.push(
+        `(G2expocode ILIKE '%${escaped}%' OR G2doi ILIKE '%${escaped}%')`,
+      );
     }
 
     for (const [col, values] of Object.entries(filters)) {
       if (!values || values.length === 0) continue;
       if (STRING_FILTER_COLUMNS.has(col)) {
-        const quoted = values.map((v) => `'${v.replace(/'/g, "''")}'`).join(', ');
+        const quoted = values
+          .map((v) => `'${v.replace(/'/g, "''")}'`)
+          .join(", ");
         clauses.push(`${col} IN (${quoted})`);
       } else {
         const nums = values.map(Number).filter((v) => !isNaN(v));
         if (nums.length > 0) {
-          clauses.push(`${col} IN (${nums.join(', ')})`);
+          clauses.push(`${col} IN (${nums.join(", ")})`);
         }
       }
     }
 
-    return clauses.length > 0 ? `WHERE ${clauses.join(' AND ')}` : '';
+    return clauses.length > 0 ? `WHERE ${clauses.join(" AND ")}` : "";
   }
 
   async function init() {
@@ -86,12 +93,20 @@ export function useGlodapData() {
       await db.instantiate(bundle.mainModule);
       conn = await db.connect();
       // Register via URL — DuckDB range-requests only the parquet footer + needed row groups
-      await db.registerFileURL(FILE_NAME, GLODAP_URL, duckdb.DuckDBDataProtocol.HTTP, false);
+      await db.registerFileURL(
+        FILE_NAME,
+        GLODAP_URL,
+        duckdb.DuckDBDataProtocol.HTTP,
+        false,
+      );
     })();
     return initPromise;
   }
 
-  async function fetchCount(search = '', filters: Record<string, string[]> = {}) {
+  async function fetchCount(
+    search = "",
+    filters: Record<string, string[]> = {},
+  ) {
     await init();
     const where = buildWhere(search, filters);
     const result = await conn!.query(
@@ -100,7 +115,12 @@ export function useGlodapData() {
     totalRecords.value = Number(result.toArray()[0].n);
   }
 
-  async function fetchPage(limit: number, offset: number, search = '', filters: Record<string, string[]> = {}) {
+  async function fetchPage(
+    limit: number,
+    offset: number,
+    search = "",
+    filters: Record<string, string[]> = {},
+  ) {
     loading.value = true;
     error.value = null;
     try {
@@ -118,8 +138,8 @@ export function useGlodapData() {
         return out;
       });
     } catch (err) {
-      console.error('Error fetching GLODAP page:', err);
-      error.value = err instanceof Error ? err.message : 'Unknown error';
+      console.error("Error fetching GLODAP page:", err);
+      error.value = err instanceof Error ? err.message : "Unknown error";
     } finally {
       loading.value = false;
     }
@@ -129,7 +149,9 @@ export function useGlodapData() {
    * Fetch distinct values for each of the given columns, excluding nulls
    * and the -9999 GLODAP missing sentinel. Used to populate FilterSelectors.
    */
-  async function fetchFilterOptions(columns: string[]): Promise<Record<string, string[]>> {
+  async function fetchFilterOptions(
+    columns: string[],
+  ): Promise<Record<string, string[]>> {
     await init();
     const result: Record<string, string[]> = {};
     for (const col of columns) {
@@ -138,7 +160,9 @@ export function useGlodapData() {
          WHERE ${col} IS NOT NULL AND ${col} != -9999
          ORDER BY ${col}`,
       );
-      result[col] = r.toArray().map((row: any) => String(coerceValue(row[col])));
+      result[col] = r
+        .toArray()
+        .map((row: any) => String(coerceValue(row[col])));
     }
     return result;
   }
@@ -148,5 +172,13 @@ export function useGlodapData() {
     if (db) await db.terminate();
   });
 
-  return { rows, totalRecords, loading, error, fetchPage, fetchCount, fetchFilterOptions };
+  return {
+    rows,
+    totalRecords,
+    loading,
+    error,
+    fetchPage,
+    fetchCount,
+    fetchFilterOptions,
+  };
 }

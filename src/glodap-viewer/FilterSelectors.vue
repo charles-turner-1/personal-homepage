@@ -4,7 +4,9 @@
     <h6 class="font-semibold mb-4">Filters</h6>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <div v-for="(options, column) in filterOptions" :key="column">
-        <label class="block text-sm font-medium mb-1">{{ formatColumnName(column) }}</label>
+        <label class="block text-sm font-medium mb-1">{{
+          formatColumnName(column)
+        }}</label>
         <MultiSelect
           :model-value="modelValue[column]"
           @update:model-value="updateFilter(column, $event)"
@@ -20,22 +22,29 @@
           autoFilterFocus
           appendTo="self"
           placeholder="No filters applied"
-          :virtualScrollerOptions="options.length > 100 ? { itemSize: 50 } : undefined"
+          :virtualScrollerOptions="
+            options.length > 100 ? { itemSize: 50 } : undefined
+          "
         />
       </div>
     </div>
     <div class="mt-4">
-      <Button label="Clear Filters" icon="pi pi-times" @click="handleClear" size="small" />
+      <Button
+        label="Clear Filters"
+        icon="pi pi-times"
+        @click="handleClear"
+        size="small"
+      />
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import Button from 'primevue/button';
-import MultiSelect from 'primevue/multiselect';
-import Toast from 'primevue/toast';
-import { useToast } from 'primevue/usetoast';
+import { ref } from "vue";
+import Button from "primevue/button";
+import MultiSelect from "primevue/multiselect";
+import Toast from "primevue/toast";
+import { useToast } from "primevue/usetoast";
 
 interface Props {
   filterOptions: Record<string, string[]>;
@@ -45,10 +54,10 @@ interface Props {
 }
 
 interface Emits {
-  (e: 'update:modelValue', value: Record<string, string[]>): void;
-  (e: 'clear'): void;
-  (e: 'dropdown-opened', column: string): void;
-  (e: 'dropdown-closed', column: string): void;
+  (e: "update:modelValue", value: Record<string, string[]>): void;
+  (e: "clear"): void;
+  (e: "dropdown-opened", column: string): void;
+  (e: "dropdown-closed", column: string): void;
 }
 
 const props = defineProps<Props>();
@@ -59,12 +68,12 @@ const filterValues = ref<Record<string, string>>({});
 
 const formatColumnName = (c: string) =>
   c
-    .split('_')
+    .split("_")
     .map((w) => {
-      const s = w || '';
-      return s.length ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+      const s = w || "";
+      return s.length ? s.charAt(0).toUpperCase() + s.slice(1) : "";
     })
-    .join(' ');
+    .join(" ");
 
 /**
  * Handles filter input changes in the MultiSelect dropdown search box.
@@ -137,19 +146,19 @@ const getSortedOptions = (fallbackOptions: string[], searchTerm?: string) => {
 
 const updateFilter = (column: string, value: string[]) => {
   const updatedFilters = { ...props.modelValue, [column]: value };
-  emit('update:modelValue', updatedFilters);
+  emit("update:modelValue", updatedFilters);
   if (props.toast) {
     toast.add({
-      severity: 'info',
-      summary: 'Filters Updated',
-      detail: 'Quickstart Code updated with current filters',
+      severity: "info",
+      summary: "Filters Updated",
+      detail: "Quickstart Code updated with current filters",
       life: 2500,
     });
   }
 };
 
 const handleClear = () => {
-  emit('clear');
+  emit("clear");
 };
 </script>
 

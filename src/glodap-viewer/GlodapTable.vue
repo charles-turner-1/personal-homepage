@@ -1,18 +1,30 @@
 <template>
   <div class="glodap-table-container">
-    <div class="mb-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+    <div
+      class="mb-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
+    >
       <!-- Left side - Title and description -->
       <div class="flex-1">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">GLODAP Interactive Data Explorer</h1>
-        <p class="text-gray-600 dark:text-gray-300">Explore the GLODAPv2.2023 Merged Master File</p>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          GLODAP Interactive Data Explorer
+        </h1>
+        <p class="text-gray-600 dark:text-gray-300">
+          Explore the GLODAPv2.2023 Merged Master File
+        </p>
       </div>
 
       <!-- Vertical divider (hidden on mobile) -->
-      <div class="hidden lg:block w-px h-16 bg-gray-300 dark:bg-gray-600 mx-6"></div>
+      <div
+        class="hidden lg:block w-px h-16 bg-gray-300 dark:bg-gray-600 mx-6"
+      ></div>
 
       <!-- Right side - Documentation link -->
       <div class="flex-shrink-0">
-        <div class="text-sm text-gray-500 dark:text-gray-400 mb-2 lg:text-right">Documentation</div>
+        <div
+          class="text-sm text-gray-500 dark:text-gray-400 mb-2 lg:text-right"
+        >
+          Documentation
+        </div>
         <div class="flex flex-col space-y-2">
           <a
             href="https://www.glodap.info/"
@@ -34,7 +46,9 @@
     >
       <div class="flex items-center">
         <i class="pi pi-exclamation-triangle text-red-500 mr-2"></i>
-        <span class="text-red-700 dark:text-red-300 font-medium">Error loading data:</span>
+        <span class="text-red-700 dark:text-red-300 font-medium"
+          >Error loading data:</span
+        >
       </div>
       <p class="text-red-600 dark:text-red-400 mt-1">{{ error }}</p>
       <button
@@ -91,7 +105,9 @@
             <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <!-- Search by expocode / DOI -->
               <div class="relative">
-                <i class="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <i
+                  class="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                ></i>
                 <InputText
                   v-model="searchValue"
                   placeholder="Search expocode or DOI..."
@@ -120,7 +136,9 @@
         <template #empty>
           <div class="text-center py-8">
             <i class="pi pi-inbox text-gray-400 text-4xl mb-3 block"></i>
-            <p class="text-gray-500 dark:text-gray-400">No observations found</p>
+            <p class="text-gray-500 dark:text-gray-400">
+              No observations found
+            </p>
           </div>
         </template>
 
@@ -143,24 +161,38 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import InputText from 'primevue/inputtext';
-import MultiSelect from 'primevue/multiselect';
-import FilterSelectors from './FilterSelectors.vue';
-import { useGlodapData } from './useGlodapData';
+import { ref, computed, watch } from "vue";
+import DataTable from "primevue/datatable";
+import Column from "primevue/column";
+import InputText from "primevue/inputtext";
+import MultiSelect from "primevue/multiselect";
+import FilterSelectors from "./FilterSelectors.vue";
+import { useGlodapData } from "./useGlodapData";
 
-const { rows, totalRecords, loading, error, fetchPage, fetchCount, fetchFilterOptions } = useGlodapData();
+const {
+  rows,
+  totalRecords,
+  loading,
+  error,
+  fetchPage,
+  fetchCount,
+  fetchFilterOptions,
+} = useGlodapData();
 
 const ROW_OPTIONS = [10, 25, 50, 100];
 const limit = ref(25);
 const page = ref(0);
 const first = computed(() => page.value * limit.value);
-const searchValue = ref('');
+const searchValue = ref("");
 
 // Columns with discrete values that are useful to filter on
-const FILTERABLE_COLUMNS = ['G2expocode', 'G2region', 'G2year', 'G2month', 'G2cruise'];
+const FILTERABLE_COLUMNS = [
+  "G2expocode",
+  "G2region",
+  "G2year",
+  "G2month",
+  "G2cruise",
+];
 const filterOptions = ref<Record<string, string[]>>({});
 const activeFilters = ref<Record<string, string[]>>({});
 
@@ -186,10 +218,14 @@ watch(searchValue, () => {
   }, 400);
 });
 
-watch(activeFilters, () => {
-  page.value = 0;
-  load();
-}, { deep: true });
+watch(
+  activeFilters,
+  () => {
+    page.value = 0;
+    load();
+  },
+  { deep: true },
+);
 
 function onFilterClear() {
   activeFilters.value = {};
@@ -197,7 +233,12 @@ function onFilterClear() {
 
 function onPageChange(event: any) {
   page.value = event.page;
-  fetchPage(limit.value, event.page * limit.value, searchValue.value, activeFilters.value);
+  fetchPage(
+    limit.value,
+    event.page * limit.value,
+    searchValue.value,
+    activeFilters.value,
+  );
 }
 
 function onRowsChange(newLimit: number) {
@@ -212,41 +253,86 @@ function reload() {
 }
 
 const KNOWN_COLUMNS = [
-  'G2expocode', 'G2cruise', 'G2station', 'G2cast', 'G2region',
-  'G2latitude', 'G2longitude', 'G2depth', 'G2year', 'G2month', 'G2day',
-  'G2hour', 'G2minute', 'G2bottomdepth', 'G2maxsampdepth', 'G2bottle',
-  'G2pressure', 'G2temperature', 'G2salinity', 'G2salinityf',
-  'G2oxygen', 'G2oxygenf', 'G2nitrate', 'G2nitratef', 'G2phosphate',
-  'G2phosphatef', 'G2silicate', 'G2silicatef', 'G2tco2', 'G2tco2f',
-  'G2talk', 'G2talkf', 'G2chla', 'G2chlaf', 'G2doi',
+  "G2expocode",
+  "G2cruise",
+  "G2station",
+  "G2cast",
+  "G2region",
+  "G2latitude",
+  "G2longitude",
+  "G2depth",
+  "G2year",
+  "G2month",
+  "G2day",
+  "G2hour",
+  "G2minute",
+  "G2bottomdepth",
+  "G2maxsampdepth",
+  "G2bottle",
+  "G2pressure",
+  "G2temperature",
+  "G2salinity",
+  "G2salinityf",
+  "G2oxygen",
+  "G2oxygenf",
+  "G2nitrate",
+  "G2nitratef",
+  "G2phosphate",
+  "G2phosphatef",
+  "G2silicate",
+  "G2silicatef",
+  "G2tco2",
+  "G2tco2f",
+  "G2talk",
+  "G2talkf",
+  "G2chla",
+  "G2chlaf",
+  "G2doi",
 ];
 
 const allColumns = computed(() => {
-  const fields = rows.value.length > 0 ? Object.keys(rows.value[0]!) : KNOWN_COLUMNS;
+  const fields =
+    rows.value.length > 0 ? Object.keys(rows.value[0]!) : KNOWN_COLUMNS;
   return fields.map((f) => ({ field: f, header: f }));
 });
 
 const DEFAULT_VISIBLE = new Set([
-  'G2expocode', 'G2cruise', 'G2station', 'G2region',
-  'G2latitude', 'G2longitude', 'G2depth', 'G2year',
-  'G2temperature', 'G2salinity', 'G2oxygen', 'G2doi',
+  "G2expocode",
+  "G2cruise",
+  "G2station",
+  "G2region",
+  "G2latitude",
+  "G2longitude",
+  "G2depth",
+  "G2year",
+  "G2temperature",
+  "G2salinity",
+  "G2oxygen",
+  "G2doi",
 ]);
 
 const selectedColumns = ref(
-  KNOWN_COLUMNS.filter((f) => DEFAULT_VISIBLE.has(f)).map((f) => ({ field: f, header: f })),
+  KNOWN_COLUMNS.filter((f) => DEFAULT_VISIBLE.has(f)).map((f) => ({
+    field: f,
+    header: f,
+  })),
 );
 
 const formatValue = (value: any): string => {
-  if (value === null || value === undefined) return '—';
-  if (typeof value === 'number') {
-    if (value === -9999) return 'N/A';
-    return Number.isInteger(value) ? String(value) : value.toFixed(4).replace(/\.?0+$/, '');
+  if (value === null || value === undefined) return "—";
+  if (typeof value === "number") {
+    if (value === -9999) return "N/A";
+    return Number.isInteger(value)
+      ? String(value)
+      : value.toFixed(4).replace(/\.?0+$/, "");
   }
   return String(value);
 };
 
 const onToggle = (value: any[]) => {
-  selectedColumns.value = allColumns.value.filter((col) => value.some((v) => v.field === col.field));
+  selectedColumns.value = allColumns.value.filter((col) =>
+    value.some((v) => v.field === col.field),
+  );
 };
 </script>
 
@@ -306,14 +392,39 @@ const onToggle = (value: any[]) => {
 }
 
 @media (prefers-color-scheme: dark) {
-  :deep(.glodap-datatable) { border-color: #4b5563; }
-  :deep(.p-datatable-header) { background-color: #374151; border-bottom-color: #4b5563; }
-  :deep(.p-datatable-thead > tr > th) { background-color: #374151; color: #f9fafb; border-bottom-color: #4b5563; }
-  :deep(.p-datatable-tbody > tr) { border-bottom-color: #374151; }
-  :deep(.p-datatable-tbody > tr:hover) { background-color: #374151; }
-  :deep(.p-datatable-tbody > tr > td) { color: #f9fafb; border-bottom-color: #374151; }
-  :deep(.p-paginator) { background-color: #374151; border-top-color: #4b5563; }
-  :deep(.p-inputtext) { background-color: #1f2937; color: #f9fafb; }
-  :deep(.p-multiselect) { background-color: #1f2937; border-color: #4b5563; }
+  :deep(.glodap-datatable) {
+    border-color: #4b5563;
+  }
+  :deep(.p-datatable-header) {
+    background-color: #374151;
+    border-bottom-color: #4b5563;
+  }
+  :deep(.p-datatable-thead > tr > th) {
+    background-color: #374151;
+    color: #f9fafb;
+    border-bottom-color: #4b5563;
+  }
+  :deep(.p-datatable-tbody > tr) {
+    border-bottom-color: #374151;
+  }
+  :deep(.p-datatable-tbody > tr:hover) {
+    background-color: #374151;
+  }
+  :deep(.p-datatable-tbody > tr > td) {
+    color: #f9fafb;
+    border-bottom-color: #374151;
+  }
+  :deep(.p-paginator) {
+    background-color: #374151;
+    border-top-color: #4b5563;
+  }
+  :deep(.p-inputtext) {
+    background-color: #1f2937;
+    color: #f9fafb;
+  }
+  :deep(.p-multiselect) {
+    background-color: #1f2937;
+    border-color: #4b5563;
+  }
 }
 </style>
