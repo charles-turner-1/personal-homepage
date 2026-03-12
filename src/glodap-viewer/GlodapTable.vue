@@ -222,7 +222,7 @@ const KNOWN_COLUMNS = [
 ];
 
 const allColumns = computed(() => {
-  const fields = rows.value.length > 0 ? Object.keys(rows.value[0]) : KNOWN_COLUMNS;
+  const fields = rows.value.length > 0 ? Object.keys(rows.value[0]!) : KNOWN_COLUMNS;
   return fields.map((f) => ({ field: f, header: f }));
 });
 
