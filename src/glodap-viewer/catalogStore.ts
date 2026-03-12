@@ -1,6 +1,20 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import * as duckdb from '@duckdb/duckdb-wasm';
+
+export interface CatalogRow {
+  name: string;
+  model: string[];
+  description: string;
+  realm: string[];
+  frequency: string[];
+  variable: string[];
+  yaml: string;
+  searchableModel: string;
+  searchableRealm: string;
+  searchableFrequency: string;
+  searchableVariable: string;
+}
 import duckdb_wasm from '@duckdb/duckdb-wasm/dist/duckdb-mvp.wasm?url';
 import mvp_worker from '@duckdb/duckdb-wasm/dist/duckdb-browser-mvp.worker.js?url';
 
