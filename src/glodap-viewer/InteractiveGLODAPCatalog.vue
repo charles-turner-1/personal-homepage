@@ -9,13 +9,17 @@
     </RouterLink>
 
     <!-- About accordion -->
-    <div class="my-6 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+    <div
+      class="my-6 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden"
+    >
       <button
         class="w-full flex items-center justify-between px-5 py-4 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
         @click="aboutOpen = !aboutOpen"
         :aria-expanded="aboutOpen"
       >
-        <span class="flex items-center gap-2 font-semibold text-gray-800 dark:text-gray-100">
+        <span
+          class="flex items-center gap-2 font-semibold text-gray-800 dark:text-gray-100"
+        >
           <i class="pi pi-info-circle text-blue-500"></i>
           About this tool
         </span>
@@ -25,36 +29,63 @@
         ></i>
       </button>
 
-      <div v-show="aboutOpen" class="px-5 py-4 bg-white dark:bg-gray-900 text-sm text-gray-600 dark:text-gray-300 space-y-3 leading-relaxed">
+      <div
+        v-show="aboutOpen"
+        class="px-5 py-4 bg-white dark:bg-gray-900 text-sm text-gray-600 dark:text-gray-300 space-y-3 leading-relaxed"
+      >
         <p>
-          Observational oceanography datasets can be a bit difficult to access. Data is often
-          freely available, but on a bunch of different sites, spread across dozens of format-specific archives, or
-          requires specialist software (MATLAB licence go brrr...) just to open a file. Even well-curated products like
-          <a href="https://www.glodap.info/" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline">GLODAP</a>
-          — a globally synthesised, quality-controlled collection of ocean interior carbon and
-          hydrographic observations — makes you download a gigabyte csv file or a .mat file first,
-          before you can do anything useful.
+          Observational oceanography datasets can be a bit difficult to access.
+          Data is often freely available, but on a bunch of different sites,
+          spread across dozens of format-specific archives, or requires
+          specialist software (MATLAB licence go brrr...) just to open a file.
+          Even well-curated products like
+          <a
+            href="https://www.glodap.info/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-blue-600 dark:text-blue-400 hover:underline"
+            >GLODAP</a
+          >
+          — a globally synthesised, quality-controlled collection of ocean
+          interior carbon and hydrographic observations — makes you download a
+          gigabyte csv file or a .mat file first, before you can do anything
+          useful.
         </p>
         <p>
-          This tool takes a different approach. The full GLODAPv2.2023 Merged Master File is stored
-          as a <a href="https://parquet.apache.org/" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline">Parquet</a>
+          This tool takes a different approach. The full GLODAPv2.2023 Merged
+          Master File is stored as a
+          <a
+            href="https://parquet.apache.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-blue-600 dark:text-blue-400 hover:underline"
+            >Parquet</a
+          >
           file on object storage, and
-          <a href="https://duckdb.org/" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline">DuckDB-WASM</a>
-          runs entirely in your browser. When you page through the data or search, DuckDB issues
-          HTTP range requests to fetch only the row groups it actually needs — so you're never
-          pulling the whole file down, just the slices relevant to your query. (This is not quite true 
-          but the LLM wanted to say it when I scaffolded this).
+          <a
+            href="https://duckdb.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-blue-600 dark:text-blue-400 hover:underline"
+            >DuckDB-WASM</a
+          >
+          runs entirely in your browser. When you page through the data or
+          search, DuckDB issues HTTP range requests to fetch only the row groups
+          it actually needs — so you're never pulling the whole file down, just
+          the slices relevant to your query. (This is not quite true but the LLM
+          wanted to say it when I scaffolded this).
         </p>
         <p>
-          The result is a completely <strong>serverless</strong> application: there is no backend,
-          no API, no compute instance to manage or pay for. The only ongoing costs are the object
-          storage (modest, on the order of cents per month) and whatever electricity your browser
-          uses while the page is open. Everything else — the query engine, the pagination, the
-          filtering — runs on your machine.
-
-          The cool bit? Once you've done your filtering, you can just export the result as either CSV or Parquet
-          and download the data. Alternatively, you can just copy the autogenerated python code snippet to grab 
-          this exact slide of data and open it with Python, without ever downloading and storing the data.
+          The result is a completely <strong>serverless</strong> application:
+          there is no backend, no API, no compute instance to manage or pay for.
+          The only ongoing costs are the object storage (modest, on the order of
+          cents per month) and whatever electricity your browser uses while the
+          page is open. Everything else — the query engine, the pagination, the
+          filtering — runs on your machine. The cool bit? Once you've done your
+          filtering, you can just export the result as either CSV or Parquet and
+          download the data. Alternatively, you can just copy the autogenerated
+          python code snippet to grab this exact slide of data and open it with
+          Python, without ever downloading and storing the data.
         </p>
       </div>
     </div>
@@ -64,9 +95,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { RouterLink } from 'vue-router';
-import GlodapTable from './GlodapTable.vue';
+import { ref } from "vue";
+import { RouterLink } from "vue-router";
+import GlodapTable from "./GlodapTable.vue";
 
 const aboutOpen = ref(false);
 </script>

@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
-import * as duckdb from '@duckdb/duckdb-wasm';
+import { defineStore } from "pinia";
+import { ref, computed } from "vue";
+import * as duckdb from "@duckdb/duckdb-wasm";
 
 export interface CatalogRow {
   name: string;
@@ -15,14 +15,15 @@ export interface CatalogRow {
   searchableFrequency: string;
   searchableVariable: string;
 }
-import duckdb_wasm from '@duckdb/duckdb-wasm/dist/duckdb-mvp.wasm?url';
-import mvp_worker from '@duckdb/duckdb-wasm/dist/duckdb-browser-mvp.worker.js?url';
+import duckdb_wasm from "@duckdb/duckdb-wasm/dist/duckdb-mvp.wasm?url";
+import mvp_worker from "@duckdb/duckdb-wasm/dist/duckdb-browser-mvp.worker.js?url";
 
 /**
  * URL to the metacatalog parquet file. Uses a CORS proxy in production
  * and a local API path in development.
  */
-const METACAT_URL = 'https://object-store.rc.nectar.org.au/v1/AUTH_685340a8089a4923a71222ce93d5d323/glodap-test/GLODAPv2.2023_Merged_Master_File.parquet';
+const METACAT_URL =
+  "https://object-store.rc.nectar.org.au/v1/AUTH_685340a8089a4923a71222ce93d5d323/glodap-test/GLODAPv2.2023_Merged_Master_File.parquet";
 
 /** DuckDB WASM bundles used by the client; selectBundle picks the best one. */
 const DUCKDB_BUNDLES: duckdb.DuckDBBundles = {
@@ -37,7 +38,7 @@ const DUCKDB_BUNDLES: duckdb.DuckDBBundles = {
 // logic in a single place and works better with DuckDB WASM's
 // JavaScript-oriented usage patterns.
 
-export const useCatalogStore = defineStore('catalog', () => {
+export const useCatalogStore = defineStore("catalog", () => {
   // State
   const data = ref<CatalogRow[]>([]);
   const loading = ref(false);
@@ -97,10 +98,15 @@ export const useCatalogStore = defineStore('catalog', () => {
     uint8Array: Uint8Array,
   ): Promise<CatalogRow[]> {
     // Register the parquet file
-    await db.registerFileBuffer('GLODAPv2.2023_Merged_Master_File.parquet', uint8Array);
+    await db.registerFileBuffer(
+      "GLODAPv2.2023_Merged_Master_File.parquet",
+      uint8Array,
+    );
 
     // Read the parquet as raw rows and normalize in JavaScript
-    const queryResult = await conn.query("SELECT * FROM read_parquet('GLODAPv2.2023_Merged_Master_File.parquet') limit 1000");
+    const queryResult = await conn.query(
+      "SELECT * FROM read_parquet('GLODAPv2.2023_Merged_Master_File.parquet') limit 1000",
+    );
 
     const rawData = queryResult.toArray();
 
@@ -110,20 +116,23 @@ export const useCatalogStore = defineStore('catalog', () => {
         if (value === null || value === undefined) return [];
 
         // Handle DuckDB Vector objects
-        if (value && typeof value.toArray === 'function') {
+        if (value && typeof value.toArray === "function") {
           return value
             .toArray()
             .filter((v: any) => v !== null && v !== undefined)
             .map(String);
         }
 
-        if (Array.isArray(value)) return value.filter((v) => v !== null && v !== undefined).map(String);
+        if (Array.isArray(value))
+          return value.filter((v) => v !== null && v !== undefined).map(String);
 
-        if (typeof value === 'string') {
+        if (typeof value === "string") {
           // Handle potential JSON strings or comma-separated values
           try {
             const parsed = JSON.parse(value);
-            return Array.isArray(parsed) ? parsed.map(String) : [String(parsed)];
+            return Array.isArray(parsed)
+              ? parsed.map(String)
+              : [String(parsed)];
           } catch {
             // If not JSON, treat as single value
             return [value];
@@ -133,18 +142,18 @@ export const useCatalogStore = defineStore('catalog', () => {
       };
 
       return {
-        name: row.name || '',
+        name: row.name || "",
         model: processListField(row.model),
-        description: row.description || '',
+        description: row.description || "",
         realm: processListField(row.realm),
         frequency: processListField(row.frequency),
         variable: processListField(row.variable),
-        yaml: row.yaml || '', // Add YAML field
+        yaml: row.yaml || "", // Add YAML field
         // Add searchable versions for better search
-        searchableModel: processListField(row.model).join(', '),
-        searchableRealm: processListField(row.realm).join(', '),
-        searchableFrequency: processListField(row.frequency).join(', '),
-        searchableVariable: processListField(row.variable).join(', '),
+        searchableModel: processListField(row.model).join(", "),
+        searchableRealm: processListField(row.realm).join(", "),
+        searchableFrequency: processListField(row.frequency).join(", "),
+        searchableVariable: processListField(row.variable).join(", "),
       };
     });
 
@@ -159,7 +168,7 @@ export const useCatalogStore = defineStore('catalog', () => {
   async function fetchCatalogData() {
     // If we already have data and no error, don't fetch again
     if (data.value.length > 0 && !error.value) {
-      console.log('✅ Using cached metacatalog data');
+      console.log("✅ Using cached metacatalog data");
       return;
     }
 
@@ -171,7 +180,10 @@ export const useCatalogStore = defineStore('catalog', () => {
 
     try {
       // Fetch parquet file and initialize DuckDB concurrently
-      const [uint8Array, dbConnection] = await Promise.all([fetchMetaCatFile(), initializeDuckDB()]);
+      const [uint8Array, dbConnection] = await Promise.all([
+        fetchMetaCatFile(),
+        initializeDuckDB(),
+      ]);
 
       db = dbConnection.db;
       conn = dbConnection.conn;
@@ -179,8 +191,9 @@ export const useCatalogStore = defineStore('catalog', () => {
       // Query and transform data
       data.value = await queryMetaCatalogPq(db, conn, uint8Array);
     } catch (err) {
-      console.error('❌ Error loading catalog data:', err);
-      error.value = err instanceof Error ? err.message : 'An unknown error occurred';
+      console.error("❌ Error loading catalog data:", err);
+      error.value =
+        err instanceof Error ? err.message : "An unknown error occurred";
     } finally {
       // Cleanup
       if (conn) await conn.close();

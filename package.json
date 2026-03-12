@@ -14,6 +14,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@carbonplan/zarr-layer": "^0.4.1",
     "@duckdb/duckdb-wasm": "^1.33.1-dev18.0",
     "@emailjs/browser": "^4.4.1",
     "@highlightjs/vue-plugin": "^2.1.0",
@@ -21,6 +22,7 @@
     "@primevue/forms": "^4.5.4",
     "@primevue/themes": "^4.4.1",
     "@tailwindcss/vite": "^4.1.18",
+    "maplibre-gl": "^5.20.0",
     "oh-vue-icons": "^1.0.0-rc3",
     "pinia": "^3.0.4",
     "primeicons": "^7.0.0",

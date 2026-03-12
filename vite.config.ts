@@ -3,6 +3,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { execSync } from "child_process";
 import tailwindcss from "@tailwindcss/vite";
+import { fileURLToPath, URL } from "node:url";
 
 // Get git commit SHA
 const getGitCommitSha = () => {
@@ -17,6 +18,11 @@ const getGitCommitSha = () => {
 export default defineConfig({
   base: process.env.NODE_ENV === "production" ? "/personal-homepage/" : "/",
   plugins: [vue(), tailwindcss()],
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
   define: {
     __GIT_COMMIT_SHA__: JSON.stringify(getGitCommitSha()),
     __BUILD_TIME__: JSON.stringify(new Date().toISOString()),

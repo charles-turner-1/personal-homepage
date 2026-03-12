@@ -5,7 +5,9 @@
     >
       <div class="flex items-center justify-between gap-4">
         <!-- Left - Name -->
-        <div class="text-sm font-semibold text-gray-600 dark:text-white whitespace-nowrap">
+        <div
+          class="text-sm font-semibold text-gray-600 dark:text-white whitespace-nowrap"
+        >
           Charles Turner
         </div>
 
@@ -17,7 +19,8 @@
             :to="link.to"
             class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
             exact-active-class="!font-bold !text-gray-900 dark:!text-white"
-          >{{ link.label }}</RouterLink>
+            >{{ link.label }}</RouterLink
+          >
         </div>
 
         <!-- Right - Git Commit + hamburger -->
@@ -29,16 +32,28 @@
             @click="menuOpen = !menuOpen"
             aria-label="Toggle menu"
           >
-            <span class="block w-5 h-0.5 bg-gray-600 dark:bg-gray-300 transition-transform duration-200" :class="menuOpen ? 'translate-y-2 rotate-45' : ''" />
-            <span class="block w-5 h-0.5 bg-gray-600 dark:bg-gray-300 transition-opacity duration-200" :class="menuOpen ? 'opacity-0' : ''" />
-            <span class="block w-5 h-0.5 bg-gray-600 dark:bg-gray-300 transition-transform duration-200" :class="menuOpen ? '-translate-y-2 -rotate-45' : ''" />
+            <span
+              class="block w-5 h-0.5 bg-gray-600 dark:bg-gray-300 transition-transform duration-200"
+              :class="menuOpen ? 'translate-y-2 rotate-45' : ''"
+            />
+            <span
+              class="block w-5 h-0.5 bg-gray-600 dark:bg-gray-300 transition-opacity duration-200"
+              :class="menuOpen ? 'opacity-0' : ''"
+            />
+            <span
+              class="block w-5 h-0.5 bg-gray-600 dark:bg-gray-300 transition-transform duration-200"
+              :class="menuOpen ? '-translate-y-2 -rotate-45' : ''"
+            />
           </button>
         </div>
       </div>
 
       <!-- Mobile menu -->
       <Transition name="mobile-menu">
-        <div v-if="menuOpen" class="sm:hidden flex flex-col gap-1 pt-3 mt-3 border-t border-gray-200/60 dark:border-gray-700/60">
+        <div
+          v-if="menuOpen"
+          class="sm:hidden flex flex-col gap-1 pt-3 mt-3 border-t border-gray-200/60 dark:border-gray-700/60"
+        >
           <RouterLink
             v-for="link in links"
             :key="link.to"
@@ -46,7 +61,8 @@
             class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors py-2 px-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
             exact-active-class="!font-bold !text-gray-900 dark:!text-white"
             @click="menuOpen = false"
-          >{{ link.label }}</RouterLink>
+            >{{ link.label }}</RouterLink
+          >
         </div>
       </Transition>
     </div>
@@ -61,18 +77,20 @@ import GitCommit from "./GitCommit.vue";
 const menuOpen = ref(false);
 
 const links = [
-  { to: '/', label: 'Home' },
-  { to: '/about', label: 'About Me' },
-  { to: '/blog', label: 'Blog' },
-  { to: '/projects', label: 'Projects' },
-  { to: '/contact', label: 'Contact' },
+  { to: "/", label: "Home" },
+  { to: "/about", label: "About Me" },
+  { to: "/blog", label: "Blog" },
+  { to: "/projects", label: "Projects" },
+  { to: "/contact", label: "Contact" },
 ];
 </script>
 
 <style scoped>
 .mobile-menu-enter-active,
 .mobile-menu-leave-active {
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
 }
 .mobile-menu-enter-from,
 .mobile-menu-leave-to {
