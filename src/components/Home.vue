@@ -9,6 +9,10 @@
         exposition for things I'm interested in. I figured that writing them up and hosting them
         somewhere might force me to make some progress with them.
       </p>
+
+      <p class="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto text-lg leading-relaxed">
+      Also, it's a handy sandbox for streaming scientific datasets to the browser - which I needed
+      </p>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
