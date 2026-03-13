@@ -130,10 +130,22 @@
       </TabList>
       <TabPanels>
         <TabPanel value="sst01">
-          <ZarrMap :refSpec="ref01deg" :varName="'sst_m'" :latName="'nj'" :lon-name="'ni'"/>
+          <ZarrMap
+            :refSpec="ref01deg"
+            :varName="'sst_m'"
+            :latName="'nj'"
+            :lon-name="'ni'"
+          />
         </TabPanel>
         <TabPanel value="sst1">
-          <ZarrMap :refSpec="ref1deg" :varName="'sst'" :lat-name="'yt_ocean'" :lon-name="'xt_ocean'" units="K" :fillValue="0"/>
+          <ZarrMap
+            :refSpec="ref1deg"
+            :varName="'sst'"
+            :lat-name="'yt_ocean'"
+            :lon-name="'xt_ocean'"
+            units="K"
+            :fillValue="0"
+          />
         </TabPanel>
       </TabPanels>
     </Tabs>
@@ -141,18 +153,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
-import ref01deg from '@/assets/ref-01deg.json'
-import ref1deg from '@/assets/ref-1deg.json'
-import Tabs from 'primevue/tabs'
-import TabList from 'primevue/tablist'
-import Tab from 'primevue/tab'
-import TabPanels from 'primevue/tabpanels'
-import TabPanel from 'primevue/tabpanel'
-import ZarrMap from '@/components/ZarrMap.vue'
+import { ref } from "vue";
+import { RouterLink } from "vue-router";
+import ref01deg from "@/assets/ref-01deg.json";
+import ref1deg from "@/assets/ref-1deg.json";
+import Tabs from "primevue/tabs";
+import TabList from "primevue/tablist";
+import Tab from "primevue/tab";
+import TabPanels from "primevue/tabpanels";
+import TabPanel from "primevue/tabpanel";
+import ZarrMap from "@/components/ZarrMap.vue";
 
-const aboutOpen = ref(false)
+const aboutOpen = ref(false);
 </script>
 
 <style scoped>
@@ -160,11 +172,11 @@ const aboutOpen = ref(false)
   padding: 0.625rem 1.25rem;
 }
 
-:deep(.p-tab[data-p-active='false']) {
+:deep(.p-tab[data-p-active="false"]) {
   background-color: rgb(248 250 252); /* slate-50 */
 }
 
-.dark :deep(.p-tab[data-p-active='false']) {
+.dark :deep(.p-tab[data-p-active="false"]) {
   background-color: rgb(30 41 59); /* slate-800 */
 }
 </style>
