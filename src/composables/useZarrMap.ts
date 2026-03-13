@@ -33,8 +33,17 @@ class ShuffleCodec {
 registry.set("shuffle", async () => ShuffleCodec);
 
 const PAWSEY_ENDPOINT = "https://projects.pawsey.org.au";
-export const TIME_STEPS = 42;
 export const CLIM: [number, number] = [-2, 40];
+
+function getTimeSteps(refSpec: Record<string, unknown>, varName: string): number {
+  const refs = refSpec.refs as Record<string, unknown>;
+  const entry = refs[`${varName}/.zarray`];
+  if (typeof entry === "string") {
+    const zarray = JSON.parse(entry) as { shape: number[] };
+    return zarray.shape[0] ?? 1;
+  }
+  return 1;
+}
 export const COLORMAP = [
   "#440154",
   "#31688e",
@@ -79,6 +88,7 @@ export function useZarrMap(
   fillValue?: number,
 ) {
   const kelvinOffset = units === "K" ? 273.15 : 0;
+  const timeSteps = getTimeSteps(refSpec, varName);
   const mapContainer = ref<HTMLDivElement | null>(null);
   const timeIndex = ref(0);
   const opacity = ref(85);
@@ -163,6 +173,7 @@ export function useZarrMap(
   return {
     mapContainer,
     timeIndex,
+    timeSteps,
     opacity,
     loadingState,
     colourbarStyle,
