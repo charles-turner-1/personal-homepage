@@ -8,13 +8,13 @@
         >
           Time step:
           <span class="font-mono text-blue-600 dark:text-blue-400"
-            >{{ timeIndex + 1 }} / {{ TIME_STEPS }}</span
+            >{{ timeIndex + 1 }} / {{ timeSteps }}</span
           >
         </label>
         <input
           type="range"
           min="0"
-          :max="TIME_STEPS - 1"
+          :max="timeSteps - 1"
           v-model.number="timeIndex"
           @input="onTimeChange"
           class="flex-1 accent-blue-600"
@@ -122,7 +122,7 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { useZarrMap, TIME_STEPS, CLIM } from "@/composables/useZarrMap";
+import { useZarrMap, CLIM } from "@/composables/useZarrMap";
 import InputNumber from "primevue/inputnumber";
 
 const props = defineProps<{
@@ -151,6 +151,7 @@ const zarrMap = useZarrMap(
 );
 const {
   timeIndex,
+  timeSteps,
   opacity,
   loadingState,
   colourbarStyle,

@@ -125,8 +125,21 @@
     <!-- Dataset tabs -->
     <Tabs value="sst01" class="mt-4">
       <TabList>
-        <Tab value="sst01">Sea Surface Temperature: 0.1°</Tab>
-        <Tab value="sst1">Sea Surface Temperature: 1°</Tab>
+        <Tab
+          value="sst01"
+          class="px-5 py-2.5 data-[p-active=false]:bg-slate-50 dark:data-[p-active=false]:bg-slate-700"
+          >Sea Surface Temperature: 0.1°</Tab
+        >
+        <Tab
+          value="sst1"
+          class="px-5 py-2.5 data-[p-active=false]:bg-slate-50 dark:data-[p-active=false]:bg-slate-700"
+          >Sea Surface Temperature: 1°</Tab
+        >
+        <Tab
+          value="atmos"
+          class="px-5 py-2.5 data-[p-active=false]:bg-slate-50 dark:data-[p-active=false]:bg-slate-700"
+          >Atmospheric Daily</Tab
+        >
       </TabList>
       <TabPanels>
         <TabPanel value="sst01">
@@ -147,6 +160,16 @@
             :fillValue="0"
           />
         </TabPanel>
+        <TabPanel value="atmos">
+          <ZarrMap
+            :refSpec="refAtmosDaily"
+            :varName="'fld_s03i236'"
+            :lat-name="'lat'"
+            :lon-name="'lon'"
+            units="K"
+            :fillValue="1.0000000200408773e20"
+          />
+        </TabPanel>
       </TabPanels>
     </Tabs>
   </div>
@@ -157,6 +180,7 @@ import { ref } from "vue";
 import { RouterLink } from "vue-router";
 import ref01deg from "@/assets/ref-01deg.json";
 import ref1deg from "@/assets/ref-1deg.json";
+import refAtmosDaily from "@/assets/ref-atmos-daily.json";
 import Tabs from "primevue/tabs";
 import TabList from "primevue/tablist";
 import Tab from "primevue/tab";
@@ -167,16 +191,4 @@ import ZarrMap from "@/components/ZarrMap.vue";
 const aboutOpen = ref(false);
 </script>
 
-<style scoped>
-:deep(.p-tab) {
-  padding: 0.625rem 1.25rem;
-}
-
-:deep(.p-tab[data-p-active="false"]) {
-  background-color: rgb(248 250 252); /* slate-50 */
-}
-
-.dark :deep(.p-tab[data-p-active="false"]) {
-  background-color: rgb(30 41 59); /* slate-800 */
-}
-</style>
+<style scoped></style>
