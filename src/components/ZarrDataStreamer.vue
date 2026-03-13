@@ -122,207 +122,49 @@
       </div>
     </div>
 
-    <!-- Controls -->
-    <div class="flex flex-wrap items-center gap-4 my-4">
-      <div class="flex items-center gap-3 flex-1 min-w-[220px]">
-        <label
-          class="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap"
-        >
-          Time step:
-          <span class="font-mono text-blue-600 dark:text-blue-400"
-            >{{ timeIndex + 1 }} / {{ TIME_STEPS }}</span
-          >
-        </label>
-        <input
-          type="range"
-          min="0"
-          :max="TIME_STEPS - 1"
-          v-model.number="timeIndex"
-          @input="onTimeChange"
-          class="flex-1 accent-blue-600"
-        />
-      </div>
-      <div class="flex items-center gap-2">
-        <label class="text-sm font-medium text-gray-700 dark:text-gray-300"
-          >Opacity:</label
-        >
-        <input
-          type="range"
-          min="0"
-          max="100"
-          v-model.number="opacity"
-          @input="onOpacityChange"
-          class="w-24 accent-blue-600"
-        />
-      </div>
-      <!-- Loading indicator -->
-      <div
-        v-if="loadingState.loading"
-        class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"
-      >
-        <i class="pi pi-spin pi-spinner"></i>
-        <span>{{
-          loadingState.chunks ? "Fetching chunks…" : "Loading metadata…"
-        }}</span>
-      </div>
-      <div
-        v-if="loadingState.error"
-        class="flex items-center gap-2 text-sm text-red-500"
-      >
-        <i class="pi pi-exclamation-triangle"></i>
-        <span>{{ loadingState.error.message }}</span>
-      </div>
-    </div>
-
-    <!-- Map -->
-    <div
-      ref="mapContainer"
-      class="w-full rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700"
-      style="height: 480px"
-    ></div>
-
-    <!-- Colourbar -->
-    <div
-      class="flex items-center gap-3 mt-2 text-xs text-gray-500 dark:text-gray-400"
-    >
-      <span>{{ CLIM[0] }}°C</span>
-      <div class="flex-1 h-3 rounded" :style="colourbarStyle"></div>
-      <span>{{ CLIM[1] }}°C</span>
-    </div>
+    <!-- Dataset tabs -->
+    <Tabs value="sst01" class="mt-4">
+      <TabList>
+        <Tab value="sst01">Sea Surface Temperature: 0.1°</Tab>
+        <Tab value="sst1">Sea Surface Temperature: 1°</Tab>
+      </TabList>
+      <TabPanels>
+        <TabPanel value="sst01">
+          <ZarrMap :refSpec="ref01deg" :varName="'sst_m'" :latName="'nj'" :lon-name="'ni'"/>
+        </TabPanel>
+        <TabPanel value="sst1">
+          <ZarrMap :refSpec="ref1deg" :varName="'sst'" :lat-name="'yt_ocean'" :lon-name="'xt_ocean'" units="K" :fillValue="0"/>
+        </TabPanel>
+      </TabPanels>
+    </Tabs>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from "vue";
-import { RouterLink } from "vue-router";
-import maplibregl from "maplibre-gl";
-import "maplibre-gl/dist/maplibre-gl.css";
-import { ZarrLayer, type LoadingState } from "@carbonplan/zarr-layer";
-import ReferenceStore from "@zarrita/storage/ref";
-import refSpec from "@/assets/ref-01deg.json";
+import { ref } from 'vue'
+import { RouterLink } from 'vue-router'
+import ref01deg from '@/assets/ref-01deg.json'
+import ref1deg from '@/assets/ref-1deg.json'
+import Tabs from 'primevue/tabs'
+import TabList from 'primevue/tablist'
+import Tab from 'primevue/tab'
+import TabPanels from 'primevue/tabpanels'
+import TabPanel from 'primevue/tabpanel'
+import ZarrMap from '@/components/ZarrMap.vue'
 
-// ── constants ────────────────────────────────────────────────────────────────
-const TIME_STEPS = 42;
-const CLIM: [number, number] = [-2, 40];
-// Viridis-ish 8-stop palette
-const COLORMAP = [
-  "#440154",
-  "#31688e",
-  "#35b779",
-  "#fde725",
-  "#f1605d",
-  "#d73027",
-  "#a50026",
-  "#ffffff",
-];
-
-// ── state ─────────────────────────────────────────────────────────────────────
-const aboutOpen = ref(false);
-const mapContainer = ref<HTMLDivElement | null>(null);
-const timeIndex = ref(0);
-const opacity = ref(85);
-const loadingState = ref<LoadingState>({
-  loading: false,
-  metadata: false,
-  chunks: false,
-  error: null,
-});
-
-// ── map + layer refs ──────────────────────────────────────────────────────────
-let map: maplibregl.Map | null = null;
-let zarrLayer: ZarrLayer | null = null;
-
-// ── colourbar gradient ────────────────────────────────────────────────────────
-const colourbarStyle = computed(() => ({
-  background: `linear-gradient(to right, ${COLORMAP.join(", ")})`,
-}));
-
-// ── lifecycle ─────────────────────────────────────────────────────────────────
-onMounted(() => {
-  if (!mapContainer.value) return;
-
-  map = new maplibregl.Map({
-    container: mapContainer.value,
-    style: {
-      version: 8,
-      sources: {},
-      layers: [
-        {
-          id: "background",
-          type: "background",
-          paint: { "background-color": "#1a1a2e" },
-        },
-      ],
-    },
-    center: [0, 0],
-    zoom: 1,
-  });
-
-  map.addControl(new maplibregl.NavigationControl(), "top-right");
-
-  map.on("load", async () => {
-    if (!map) return;
-
-    // Kerchunk refs contain s3:// URIs pointing at Pawsey Ceph, not AWS.
-    // Rewrite s3://<bucket>/... → https://projects.pawsey.org.au/<bucket>/...
-    const PAWSEY_ENDPOINT = "https://projects.pawsey.org.au";
-    const rawRefs = (refSpec as Record<string, unknown>).refs as Record<
-      string,
-      unknown
-    >;
-    const rewrittenRefs: Record<string, unknown> = {};
-    for (const [k, v] of Object.entries(rawRefs)) {
-      if (
-        Array.isArray(v) &&
-        typeof v[0] === "string" &&
-        v[0].startsWith("s3://")
-      ) {
-        rewrittenRefs[k] = [
-          v[0].replace(/^s3:\/\//, `${PAWSEY_ENDPOINT}/`),
-          v[1],
-          v[2],
-        ];
-      } else {
-        rewrittenRefs[k] = v;
-      }
-    }
-    const patchedSpec = { ...refSpec, refs: rewrittenRefs };
-    const store = ReferenceStore.fromSpec(
-      patchedSpec as Record<string, unknown>,
-    );
-
-    zarrLayer = new ZarrLayer({
-      id: "sst",
-      store,
-      variable: "sst_m",
-      selector: { time: 0 },
-      colormap: COLORMAP,
-      clim: CLIM,
-      opacity: opacity.value / 100,
-      zarrVersion: 2,
-      spatialDimensions: { lat: "nj", lon: "ni" },
-      bounds: [-180, -90, 180, 90],
-      onLoadingStateChange: (state) => {
-        loadingState.value = state;
-      },
-    });
-
-    map.addLayer(zarrLayer as unknown as maplibregl.CustomLayerInterface);
-  });
-});
-
-onUnmounted(() => {
-  map?.remove();
-  map = null;
-  zarrLayer = null;
-});
-
-// ── handlers ──────────────────────────────────────────────────────────────────
-function onTimeChange() {
-  zarrLayer?.setSelector({ time: timeIndex.value });
-}
-
-function onOpacityChange() {
-  zarrLayer?.setOpacity(opacity.value / 100);
-}
+const aboutOpen = ref(false)
 </script>
+
+<style scoped>
+:deep(.p-tab) {
+  padding: 0.625rem 1.25rem;
+}
+
+:deep(.p-tab[data-p-active='false']) {
+  background-color: rgb(248 250 252); /* slate-50 */
+}
+
+.dark :deep(.p-tab[data-p-active='false']) {
+  background-color: rgb(30 41 59); /* slate-800 */
+}
+</style>
