@@ -125,9 +125,21 @@
     <!-- Dataset tabs -->
     <Tabs value="sst01" class="mt-4">
       <TabList>
-        <Tab value="sst01" class="px-5 py-2.5 data-[p-active=false]:bg-slate-50 dark:data-[p-active=false]:bg-slate-700">Sea Surface Temperature: 0.1°</Tab>
-        <Tab value="sst1" class="px-5 py-2.5 data-[p-active=false]:bg-slate-50 dark:data-[p-active=false]:bg-slate-700">Sea Surface Temperature: 1°</Tab>
-        <Tab value="atmos" class="px-5 py-2.5 data-[p-active=false]:bg-slate-50 dark:data-[p-active=false]:bg-slate-700">Atmospheric Daily</Tab>
+        <Tab
+          value="sst01"
+          class="px-5 py-2.5 data-[p-active=false]:bg-slate-50 dark:data-[p-active=false]:bg-slate-700"
+          >Sea Surface Temperature: 0.1°</Tab
+        >
+        <Tab
+          value="sst1"
+          class="px-5 py-2.5 data-[p-active=false]:bg-slate-50 dark:data-[p-active=false]:bg-slate-700"
+          >Sea Surface Temperature: 1°</Tab
+        >
+        <Tab
+          value="atmos"
+          class="px-5 py-2.5 data-[p-active=false]:bg-slate-50 dark:data-[p-active=false]:bg-slate-700"
+          >Atmospheric Daily</Tab
+        >
       </TabList>
       <TabPanels>
         <TabPanel value="sst01">
@@ -155,7 +167,7 @@
             :lat-name="'lat'"
             :lon-name="'lon'"
             units="K"
-            :fillValue="1.0000000200408773e+20"
+            :fillValue="1.0000000200408773e20"
           />
         </TabPanel>
       </TabPanels>
@@ -179,5 +191,4 @@ import ZarrMap from "@/components/ZarrMap.vue";
 const aboutOpen = ref(false);
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

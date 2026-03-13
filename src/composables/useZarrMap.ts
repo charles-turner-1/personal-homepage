@@ -35,7 +35,10 @@ registry.set("shuffle", async () => ShuffleCodec);
 const PAWSEY_ENDPOINT = "https://projects.pawsey.org.au";
 export const CLIM: [number, number] = [-2, 40];
 
-function getTimeSteps(refSpec: Record<string, unknown>, varName: string): number {
+function getTimeSteps(
+  refSpec: Record<string, unknown>,
+  varName: string,
+): number {
   const refs = refSpec.refs as Record<string, unknown>;
   const entry = refs[`${varName}/.zarray`];
   if (typeof entry === "string") {
