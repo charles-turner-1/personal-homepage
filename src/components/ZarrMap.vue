@@ -120,10 +120,13 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue";
+import { reactive, watch } from "vue";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useZarrMap, CLIM } from "@/composables/useZarrMap";
 import InputNumber from "primevue/inputnumber";
+import { usePosthog } from "@/composables/usePosthog";
+
+const { capture } = usePosthog();
 
 const props = defineProps<{
   refSpec: Record<string, unknown>;
@@ -155,17 +158,65 @@ const {
   opacity,
   loadingState,
   colourbarStyle,
-  onTimeChange,
-  onOpacityChange,
+  onTimeChange: _onTimeChange,
+  onOpacityChange: _onOpacityChange,
 } = zarrMap;
+
+// Track map load and errors
+watch(
+  () => loadingState.value.loading,
+  (loading, wasLoading) => {
+    if (wasLoading && !loading) {
+      if (loadingState.value.error) {
+        capture("zarr_map_error", {
+          var_name: props.varName,
+          message: loadingState.value.error.message,
+        });
+      } else {
+        capture("zarr_map_loaded", { var_name: props.varName });
+      }
+    }
+  },
+);
+
+// Debounced wrappers for slider events (1 s)
+let timeDebounce: ReturnType<typeof setTimeout> | null = null;
+function onTimeChange() {
+  _onTimeChange();
+  if (timeDebounce) clearTimeout(timeDebounce);
+  timeDebounce = setTimeout(() => {
+    capture("zarr_map_time_changed", {
+      var_name: props.varName,
+      time_index: timeIndex.value,
+    });
+  }, 1000);
+}
+
+let opacityDebounce: ReturnType<typeof setTimeout> | null = null;
+function onOpacityChange() {
+  _onOpacityChange();
+  if (opacityDebounce) clearTimeout(opacityDebounce);
+  opacityDebounce = setTimeout(() => {
+    capture("zarr_map_opacity_changed", {
+      var_name: props.varName,
+      opacity: opacity.value,
+    });
+  }, 1000);
+}
 
 function onClimChange() {
   zarrMap.setClim([clim.lower, clim.upper]);
+  capture("zarr_map_clim_changed", {
+    var_name: props.varName,
+    lower: clim.lower,
+    upper: clim.upper,
+  });
 }
 
 function resetClim() {
   clim.lower = clim.defaultLower;
   clim.upper = clim.defaultUpper;
   zarrMap.setClim([clim.lower, clim.upper]);
+  capture("zarr_map_clim_reset", { var_name: props.varName });
 }
 </script>

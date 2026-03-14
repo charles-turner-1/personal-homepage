@@ -168,6 +168,9 @@ import InputText from "primevue/inputtext";
 import MultiSelect from "primevue/multiselect";
 import FilterSelectors from "./FilterSelectors.vue";
 import { useGlodapData } from "./useGlodapData";
+import { usePosthog } from "@/composables/usePosthog";
+
+const { capture } = usePosthog();
 
 const {
   rows,
@@ -215,20 +218,25 @@ watch(searchValue, () => {
   searchTimer = setTimeout(() => {
     page.value = 0;
     load();
+    if (searchValue.value) {
+      capture("glodap_search", { query: searchValue.value });
+    }
   }, 400);
 });
 
 watch(
   activeFilters,
-  () => {
+  (filters) => {
     page.value = 0;
     load();
+    capture("glodap_filter_applied", { filters });
   },
   { deep: true },
 );
 
 function onFilterClear() {
   activeFilters.value = {};
+  capture("glodap_filter_cleared");
 }
 
 function onPageChange(event: any) {
@@ -239,12 +247,14 @@ function onPageChange(event: any) {
     searchValue.value,
     activeFilters.value,
   );
+  capture("glodap_page_changed", { page: event.page, rows: limit.value });
 }
 
 function onRowsChange(newLimit: number) {
   limit.value = newLimit;
   page.value = 0;
   load();
+  capture("glodap_rows_per_page_changed", { rows: newLimit });
 }
 
 function reload() {
@@ -333,6 +343,7 @@ const onToggle = (value: any[]) => {
   selectedColumns.value = allColumns.value.filter((col) =>
     value.some((v) => v.field === col.field),
   );
+  capture("glodap_columns_changed", { columns: value.map((c) => c.field) });
 };
 </script>
 
