@@ -14,7 +14,7 @@
     >
       <button
         class="w-full flex items-center justify-between px-5 py-4 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
-        @click="aboutOpen = !aboutOpen"
+        @click="toggleAbout()"
         :aria-expanded="aboutOpen"
       >
         <span
@@ -98,6 +98,15 @@
 import { ref } from "vue";
 import { RouterLink } from "vue-router";
 import GlodapTable from "./GlodapTable.vue";
+import { usePosthog } from "@/composables/usePosthog";
 
+const { capture } = usePosthog();
 const aboutOpen = ref(false);
+
+function toggleAbout() {
+  aboutOpen.value = !aboutOpen.value;
+  if (aboutOpen.value) {
+    capture("glodap_about_opened");
+  }
+}
 </script>
