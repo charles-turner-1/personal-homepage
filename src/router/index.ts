@@ -2,7 +2,6 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import { ref } from "vue";
 import { posthog } from "@/composables/usePosthog";
 
-
 const routes = [
   {
     path: "/",
