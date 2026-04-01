@@ -16,6 +16,8 @@ import Tooltip from "primevue/tooltip";
 import "highlight.js/styles/github-dark.css";
 import hljs from "highlight.js/lib/core";
 import python from "highlight.js/lib/languages/python";
+import json from "highlight.js/lib/languages/json";
+import bash from "highlight.js/lib/languages/bash";
 import hljsVuePlugin from "@highlightjs/vue-plugin";
 
 // OhVueIcons
@@ -41,6 +43,8 @@ addIcons(
 );
 
 hljs.registerLanguage("python", python);
+hljs.registerLanguage("json", json);
+hljs.registerLanguage("bash", bash);
 
 const app = createApp(App);
 const pinia = createPinia();

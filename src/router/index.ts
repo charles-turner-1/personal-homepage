@@ -68,6 +68,16 @@ const routes = [
       title: "Zarr Data Streamer",
     },
   },
+  {
+    path: "/blog/virtualising-on-acacia",
+    name: "VirtualisingOnAcacia",
+    component: () =>
+      import("../components/blog_posts/VirtualisingOnAcacia.vue"),
+    meta: {
+      title:
+        "Virtualising & Distributing Data through Acacia (Pawsey) & Nirin (NCI)",
+    },
+  },
 ];
 
 const router = createRouter({
