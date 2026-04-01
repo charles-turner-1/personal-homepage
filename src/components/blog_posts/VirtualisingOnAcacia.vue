@@ -17,8 +17,8 @@
       Australia to heart (unless you can make it happen)
     </p>
     <p class="m-4 font-semibold">
-      Disclaimer 3: Any claims here about the 'correct' or 'proper' way to do things 
-      are just my personal opinions.
+      Disclaimer 3: Any claims here about the 'correct' or 'proper' way to do things  
+      are just my personal opinions. Same goes for any other opinions expressed.
     </p>
 
     <p class="mb-4">
