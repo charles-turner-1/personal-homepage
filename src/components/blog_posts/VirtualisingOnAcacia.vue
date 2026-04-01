@@ -16,6 +16,10 @@
       Disclaimer 2: Please don't take my jokes about not doing cloud in
       Australia to heart (unless you can make it happen)
     </p>
+    <p class="m-4 font-semibold">
+      Disclaimer 3: Any claims here about the 'correct' or 'proper' way to do things 
+      are just my personal opinions.
+    </p>
 
     <p class="mb-4">
       At AMOS 2026 (Hobart, February), we did a bunch of alpha user testing on a
