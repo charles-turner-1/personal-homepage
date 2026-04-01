@@ -11,7 +11,10 @@
         🤞.
       </p>
     </div>
+    <BlogItems />
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import BlogItems from "./BlogItems.vue";
+</script>

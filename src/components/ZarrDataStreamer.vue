@@ -39,8 +39,8 @@
           <i class="pi pi-info-circle text-blue-500"></i>
           Disclaimer: This info was written by Claude Sonnet 4.6. It's mostly
           right (especially the technical bits), but may be subtly misleading.
-          At some point, I might come back and rewrite it. 
-       </span>
+          At some point, I might come back and rewrite it.
+        </span>
 
         <p>
           Climate model output is large. The ACCESS-OM2-01 run used here
