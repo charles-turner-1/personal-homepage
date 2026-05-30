@@ -10,13 +10,18 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@carbonplan/zarr-layer": "^0.5.0",
     "@emailjs/browser": "^4.4.1",
     "@nuxt/content": "^3.14.0",
     "@nuxt/ui": "^4.8.1",
     "better-sqlite3": "^12.10.0",
+    "maplibre": "^0.0.1-security",
+    "maplibre-gl": "^5.24.0",
     "nuxt": "^4.4.6",
+    "posthog-js": "^1.376.4",
     "tailwindcss": "^4.3.0",
     "vue": "^3.5.34",
-    "vue-router": "^5.0.7"
+    "vue-router": "^5.0.7",
+    "zarrita": "^0.7.3"
   }
 }

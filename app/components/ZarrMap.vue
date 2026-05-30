@@ -2,9 +2,8 @@
 import { reactive, watch } from "vue";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useZarrMap, CLIM } from "@/composables/useZarrMap";
-import InputNumber from "primevue/inputnumber";
-import { usePosthog } from "@/composables/usePosthog";
 
+import { usePosthog } from "@/composables/usePosthog";
 const { capture } = usePosthog();
 
 const props = defineProps<{
@@ -177,7 +176,7 @@ function resetClim() {
             class="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap"
             >Min</label
           >
-          <InputNumber
+          <UInputNumber
             v-model="clim.lower"
             :min="-2"
             :max="clim.upper - 0.5"
@@ -186,7 +185,6 @@ function resetClim() {
             :maxFractionDigits="1"
             showButtons
             suffix="°C"
-            size="small"
             class="flex-1"
             @update:modelValue="onClimChange"
           />
@@ -196,7 +194,7 @@ function resetClim() {
             class="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap"
             >Max</label
           >
-          <InputNumber
+          <UInputNumber
             v-model="clim.upper"
             :min="clim.lower + 0.5"
             :max="50"
@@ -205,7 +203,6 @@ function resetClim() {
             :maxFractionDigits="1"
             showButtons
             suffix="°C"
-            size="small"
             class="flex-1"
             @update:modelValue="onClimChange"
           />
