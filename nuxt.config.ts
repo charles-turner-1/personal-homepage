@@ -2,9 +2,22 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxt/ui'],
-  css: ['~/assets/css/main.css']
-})
+  modules: ['@nuxt/ui', "@nuxt/content"],
+  css: ['~/assets/css/main.css'],
+  content: {
+    build: {
+      markdown: {
+        highlight: {
+          theme: {
+            default: 'github-light',
+            dark: 'github-dark'
+            // TODO: Themes are shit.
+          },
+        langs: ['js', 'ts', 'vue', 'json', 'yaml', 'bash', 'python']
+      }
+    }
+  }
+}})
 
 
 // Stolen from my old vite/primevue based homepage. Will need to be adapted into 
