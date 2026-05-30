@@ -17,7 +17,15 @@ export default defineNuxtConfig({
       }
     }
   }
-}})
+  },
+  vite: {
+    optimizeDeps: {
+      include: [
+        '@emailjs/browser',
+      ]
+    }
+  }
+})
 
 
 // Stolen from my old vite/primevue based homepage. Will need to be adapted into 

@@ -16,8 +16,11 @@ const items = computed<NavigationMenuItem[]>(() => [
 <!-- Default layout template.  -->
 <template>
     <div>
-        <UHeader>
+        <UHeader :title="''">
             <UNavigationMenu :items="items" />
+            <template #right>
+                <GitCommit />
+            </template>
         </UHeader>
         <div class="bg-gray-50">
         <UMain>
