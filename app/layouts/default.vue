@@ -7,7 +7,7 @@ const items = computed<NavigationMenuItem[]>(() => [
   { label: 'Home', to: '/' , active: route.path === ('/') },
   { label: 'About Me', to: '/about-me', active: route.path.startsWith('/about-me') },
   { label: 'Projects', to: '/projects', active: route.path.startsWith('/projects') },
-  { label: 'Blog', to: '/interactive-glodap-catalog', active: route.path.startsWith('/interactive-glodap-catalog') },
+  { label: 'Blog', to: '/blog', active: route.path.startsWith('/interactive-glodap-catalog') },
   { label: 'Contact', to: '/contact', active: route.path.startsWith('/contact') },
 ]);
 
@@ -19,8 +19,10 @@ const items = computed<NavigationMenuItem[]>(() => [
         <UHeader>
             <UNavigationMenu :items="items" />
         </UHeader>
-        <UMain>
-            <slot/>
+        <UMain class="bg-gray-50">
+            <div class="container text-center mx-auto px-6 py-6">
+                <slot/>
+            </div>
         </UMain>
     </div>
 </template>

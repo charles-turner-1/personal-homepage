@@ -8,14 +8,12 @@ definePageMeta({
 const { data: post } = await useAsyncData(() => queryCollection('content').path('/home').first())
 
 useSeoMeta({
-  title: post.value?.title,
+  title: 'Charles Turner',
   description: post.value?.description
 })
 </script>
 
 <template>
-  <div class="container mx-auto px-6 py-12">
-    <div class="text-center mb-12 mt-12">
       <ContentRenderer v-if="post" :value="post" class="prose dark:prose-invert max-w-3xl mx-auto"/>
 
 
@@ -34,7 +32,4 @@ useSeoMeta({
         blocker, I'd appreciate you whitelisting this domain and/or enabling 
         javascript, so the data is meaningful.
       </p>
-    </div>
-
-  </div>
 </template>
