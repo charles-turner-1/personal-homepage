@@ -55,44 +55,18 @@ const copyCommitSha = async () => {
 </script>
 
 <template>
-  <div class="flex items-center gap-5">
-    <div v-if="commitSha && commitSha !== 'unknown'" class="inline-flex">
-      <a
-        :href="commitUrl"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="flex items-center gap-2 px-2.5 py-1 bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-md transition-colors text-xs font-mono border border-green-300 dark:border-green-700"
-        @mouseenter="showCommitPopover"
-        @mouseleave="scheduleHidePopover"
-      >
-        <i class="pi pi-github text-sm text-green-700 dark:text-green-400"></i>
-        <span class="text-green-700 dark:text-green-300">{{
-          shortCommitSha
-        }}</span>
-      </a>
-      <UPopover
-        ref="commitPopover"
-        @mouseenter="cancelHidePopover"
-        @mouseleave="hideCommitPopover"
-      >
-        <div class="p-3 max-w-md">
-          <div class="text-sm text-gray-900 dark:text-gray-100 mb-2">
-            <strong>Commit:</strong> {{ commitSha }}
-          </div>
-          <div
-            v-if="buildTime"
-            class="text-xs text-gray-600 dark:text-gray-400 mb-3"
-          >
-            <strong>Built:</strong> {{ new Date(buildTime).toLocaleString() }}
-          </div>
-          <UButton
-            label="Copy SHA"
-            icon="pi pi-copy"
-            @click="copyCommitSha"
-            class="w-full"
-          />
-        </div>
-      </UPopover>
+  <UPopover class="flex items-center">
+  <UButton :label="`Commit: ${ commitSha }`" class="text-sm text-gray-900 dark:text-gray-100 mb-2"></UButton>
+      <template #content>
+<div class="p-3 max-w-md">
+      <div class="text-sm text-gray-900 dark:text-gray-100 mb-2">
+        <strong>Commit:</strong> {{ commitSha }}
+      </div>
+      <div v-if="buildTime" class="text-xs text-gray-600 dark:text-gray-400 mb-3">
+        <strong>Built:</strong> {{ new Date(buildTime).toLocaleString() }}
+      </div>
+      <UButton label="Copy SHA" icon="i-lucide-copy" @click="copyCommitSha" class="w-full" />
     </div>
-  </div>
+      </template>
+  </UPopover>
 </template>
