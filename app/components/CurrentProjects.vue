@@ -3,13 +3,6 @@ import LinkCard from "./LinkCard.vue";
 
 const projects = [
   {
-    name: "Interactive Data Explorer",
-    icons: ["i-vscode-icons-file-type-vue", "i-vscode-icons-file-type-typescript"],
-    description:
-      "An interactive explorer for browsing and visualising scientific datasets.",
-    href: "/projects/interactive-data-explorer",
-  },
-  {
     name: "Interactive GLODAP Catalog",
     icons: ["i-vscode-icons-file-type-vue", "i-vscode-icons-file-type-typescript"],
     description:

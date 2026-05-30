@@ -10,7 +10,7 @@
       v-else-if="img"
       :src="img"
       alt="Contact Icon"
-      class="w-20 h-20 object-contain"
+      class="size-20 object-contain"
     />
     <div class="text-center">
       <div
