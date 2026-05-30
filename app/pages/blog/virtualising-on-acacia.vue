@@ -8,6 +8,6 @@ useSeoMeta({
 </script>
 
 <template>
-  <ContentRenderer v-if="post" :value="post" class="p-4"/>
+  <ContentRenderer v-if="post" :value="post" class="p-4 text-left"/>
   <div v-else>Blog post not found</div>
 </template>
