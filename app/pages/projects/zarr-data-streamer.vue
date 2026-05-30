@@ -28,13 +28,15 @@ const items = ref<TabsItem[]>([
 </script>
 
 <template>
-  <div class="container mx-auto mt-10 p-6 text-left">
+  <div class="container mx-auto p-2 text-left">
     <NuxtLink
       to="/projects"
       class="text-left"
     >
-      <UIcon name="i-bi-arrow-left" scale="0.9" />
-      Back to Projects
+    <span class="ml-1 text-blue-600 dark:text-blue-400 hover:underline inline-flex gap-1 items-center">
+        <UIcon :name="'i-lucide-chevron-left'" class="size-5" />
+        Back to Projects
+      </span>
   </NuxtLink>
 
   <!-- TODO: About component should be a markdown file -->
