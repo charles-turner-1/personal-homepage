@@ -1,0 +1,55 @@
+name: Validate Nuxt Build
+
+on:
+  push:
+    branches-ignore: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+
+    env:
+      NITRO_PRESET: github_pages
+      NUXT_APP_BASE_URL: /personal-homepage/
+      NUXT_PUBLIC_EMAILJS_SERVICE_ID: ${{ secrets.NUXT_PUBLIC_EMAILJS_SERVICE_ID }}
+      NUXT_PUBLIC_EMAILJS_TEMPLATE_ID: ${{ secrets.NUXT_PUBLIC_EMAILJS_TEMPLATE_ID }}
+      NUXT_PUBLIC_EMAILJS_PUBLIC_KEY: ${{ secrets.NUXT_PUBLIC_EMAILJS_PUBLIC_KEY }}
+      NUXT_PUBLIC_POSTHOG_KEY: ${{ secrets.NUXT_PUBLIC_POSTHOG_KEY }}
+      NUXT_PUBLIC_POSTHOG_HOST: ${{ secrets.NUXT_PUBLIC_POSTHOG_HOST }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint formatting with Prettier
+        run: npm run format:check
+
+      - name: Run Nuxt typecheck
+        run: npm run typecheck
+
+      - name: Generate static site
+        run: NODE_ENV=production npm run generate
+
+      - name: Check build artifacts
+        run: |
+          if [ ! -d ".output/public" ]; then
+            echo "Build failed: .output/public directory not created"
+            exit 1
+          fi
+          if [ ! -f ".output/public/index.html" ]; then
+            echo "Build failed: index.html not found in .output/public"
+            exit 1
+          fi
+          echo "Build successful! Generated files:"
+          ls -la .output/public/
