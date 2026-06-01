@@ -105,7 +105,6 @@ async function handleSubmit() {
       </Transition>
       <UButton
         type="submit"
-        variant="soft"
         label="Send message"
         icon="i-bi-send"
         :loading="loading"
