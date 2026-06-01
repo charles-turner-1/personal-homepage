@@ -33,6 +33,9 @@ const items = computed<NavigationMenuItem[]>(() => [
           <GitCommit />
         </div>
       </template>
+      <template #body>
+        <UNavigationMenu :items="items" orientation="vertical" class="mx-2.5" />
+      </template>
     </UHeader>
     <div class="bg-gray-50">
       <UMain>
