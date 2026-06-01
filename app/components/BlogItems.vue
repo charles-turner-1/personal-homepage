@@ -8,6 +8,14 @@ const posts = [
       "Playing around with virtualisation, data distribution and streaming with virtualizarr, icechunk, kerchunk.",
     href: "/blog/virtualising-on-acacia",
   },
+  {
+    title:
+      "Notes on chunking climated data 'optimally'",
+    date: "June 2026",
+    excerpt:
+      "Some notes on chunking strategies, drafted for NPCP chunking section. Written off the cuff, on the plane.",
+    href: "/blog/chunking-notes",
+  },
 ];
 </script>
 
