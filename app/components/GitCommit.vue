@@ -55,8 +55,7 @@ const copyCommitSha = async () => {
 <template>
   <UPopover :content="{ side: 'bottom', align: 'end', sideOffset: 8 }">
     <UButton
-      color="neutral"
-      variant="subtle"
+      variant="soft"
       size="sm"
       class="inline-flex items-center"
     >
@@ -76,6 +75,7 @@ const copyCommitSha = async () => {
         </div>
         <div class="pt-1">
           <UButton
+            variant="soft"
             label="Copy SHA"
             icon="i-lucide-copy"
             size="xs"
