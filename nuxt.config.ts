@@ -1,4 +1,4 @@
-import {execSync} from "child_process";
+import { execSync } from "child_process";
 // Get git commit SHA
 const getGitCommitSha = () => {
   try {
@@ -10,55 +10,56 @@ const getGitCommitSha = () => {
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2025-07-15',
+  compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
-  modules: ['@nuxt/ui', "@nuxt/content"],
-  css: ['~/assets/css/main.css'],
+  modules: ["@nuxt/ui", "@nuxt/content"],
+  css: ["~/assets/css/main.css"],
   app: {
-    baseURL: process.env.NODE_ENV === "production" ? "/personal-homepage/" : "/"
+    baseURL:
+      process.env.NODE_ENV === "production" ? "/personal-homepage/" : "/",
   },
   runtimeConfig: {
     public: {
       gitCommitSha: getGitCommitSha(),
-      buildTime: new Date().toISOString()
-    }
+      buildTime: new Date().toISOString(),
+      emailjsServiceId: process.env.NUXT_PUBLIC_EMAILJS_SERVICE_ID ?? "",
+      emailjsTemplateId: process.env.NUXT_PUBLIC_EMAILJS_TEMPLATE_ID ?? "",
+      emailjsPublicKey: process.env.NUXT_PUBLIC_EMAILJS_PUBLIC_KEY ?? "",
+      posthogKey: process.env.NUXT_PUBLIC_POSTHOG_KEY ?? "",
+      posthogHost: process.env.NUXT_PUBLIC_POSTHOG_HOST ?? "",
+    },
   },
   content: {
     build: {
       markdown: {
         highlight: {
           theme: {
-            default: 'github-light',
-            dark: 'github-dark'
+            default: "github-light",
+            dark: "github-dark",
             // TODO: Themes are shit.
           },
-        langs: ['js', 'ts', 'vue', 'json', 'yaml', 'bash', 'python']
-      }
-    }
-  }
+          langs: ["js", "ts", "vue", "json", "yaml", "bash", "python"],
+        },
+      },
+    },
   },
   vite: {
     optimizeDeps: {
-      include: [
-        '@emailjs/browser',
-        '@vue/devtools-core',
-        '@vue/devtools-kit',
-      ]
-    }
-  }
-})
+      include: ["@emailjs/browser", "@vue/devtools-core", "@vue/devtools-kit"],
+    },
+  },
+});
 
-
-// Stolen from my old vite/primevue based homepage. Will need to be adapted into 
+// Stolen from my old vite/primevue based homepage. Will need to be adapted into
 // this nuxt project
-//    
+//
 //    /// <reference types="vitest" />
 //    import { defineConfig } from "vite";
 //    import vue from "@vitejs/plugin-vue";
 //    import { execSync } from "child_process";
 //    import tailwindcss from "@tailwindcss/vite";
 //    import { fileURLToPath, URL } from "node:url";
-//    
+//
 //    // Get git commit SHA
 //    const getGitCommitSha = () => {
 //      try {
@@ -67,7 +68,7 @@ export default defineNuxtConfig({
 //        return "unknown";
 //      }
 //    };
-//    
+//
 //    // https://vite.dev/config/
 //    export default defineConfig({
 //      base: process.env.NODE_ENV === "production" ? "/personal-homepage/" : "/",
@@ -102,5 +103,5 @@ export default defineNuxtConfig({
 //        },
 //      },
 //    });
-//    
-//    
+//
+//

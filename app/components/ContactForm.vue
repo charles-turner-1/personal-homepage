@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import emailjs from "@emailjs/browser";
 
+const config = useRuntimeConfig();
+const emailjsServiceId = String(config.public.emailjsServiceId || "");
+const emailjsTemplateId = String(config.public.emailjsTemplateId || "");
+const emailjsPublicKey = String(config.public.emailjsPublicKey || "");
 const form = reactive({ name: "", email: "", message: "" });
 const honeypot = ref(false);
 const loading = ref(false);
@@ -14,15 +18,14 @@ async function handleSubmit() {
 
   try {
     await emailjs.send(
-        // TODO: Replace these via useRuntimeConfig.
-      import.meta.env.VITE_EMAILJS_SERVICE_ID,
-      import.meta.env.VITE_EMAILJS_TEMPLATE_ID, 
+      emailjsServiceId,
+      emailjsTemplateId,
       {
         from_name: form.name,
         from_email: form.email,
         message: form.message,
       },
-      { publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY },
+      { publicKey: emailjsPublicKey },
     );
     status.value = "success";
     form.name = "";
@@ -68,15 +71,12 @@ async function handleSubmit() {
         v-model="form.message"
         autoResize
         placeholder="What can I do for you?"
-        rows="5"
+        :rows="5"
         class="w-full resize-none"
       />
     </div>
     <!-- Honeypot field: hidden from real users, bots will fill it in -->
-    <div
-      aria-hidden="true"
-      class="absolute -left-[9999px] -top-[9999px] overflow-hidden"
-    >
+    <div aria-hidden="true" class="sr-only">
       <label for="bot-check">Tick me if you're a bot</label>
       <input
         id="bot-check"

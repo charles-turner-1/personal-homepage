@@ -54,11 +54,7 @@ const copyCommitSha = async () => {
 
 <template>
   <UPopover :content="{ side: 'bottom', align: 'end', sideOffset: 8 }">
-    <UButton
-      variant="soft"
-      size="sm"
-      class="inline-flex items-center"
-    >
+    <UButton variant="soft" size="sm" class="inline-flex items-center">
       <UIcon name="i-bi-github" class="mr-1" />
       Commit: {{ shortCommitSha }}
     </UButton>

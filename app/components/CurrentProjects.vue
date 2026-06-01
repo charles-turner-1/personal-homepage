@@ -4,10 +4,13 @@ import LinkCard from "./LinkCard.vue";
 const projects = [
   {
     name: "Interactive GLODAP Catalog",
-    icons: ["i-vscode-icons-file-type-vue", "i-vscode-icons-file-type-typescript"],
+    icons: [
+      "i-vscode-icons-file-type-vue",
+      "i-vscode-icons-file-type-typescript",
+    ],
     description:
       "An interactive catalog for exploring GLODAP ocean chemistry data.",
-    href: "/projects/interactive-glodap-catalog",
+    href: "/interactive-glodap-catalog",
   },
   {
     name: "Zarr Data Streamer",

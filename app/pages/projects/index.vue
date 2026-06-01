@@ -1,8 +1,7 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
- <div class="text-left px-4 mx-4">
+  <div class="text-left px-4 mx-4">
     <p class="text-3xl mt-6 mb-4">Things I'm tinkering with currently</p>
     <CurrentProjects />
 
@@ -12,5 +11,5 @@
     <Publications />
     <p class="text-3xl mt-6 mb-4">Half finished software tools I've created</p>
     <MyGithubRepos />
- </div>
+  </div>
 </template>

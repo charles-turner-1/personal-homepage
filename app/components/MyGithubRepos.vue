@@ -52,7 +52,8 @@ const repos = [
 
 <template>
   <div class="font-semibold my-2">
-    These aren't serious work projects - just some ideas I started and (mostly) never finished.
+    These aren't serious work projects - just some ideas I started and (mostly)
+    never finished.
   </div>
   <div class="text-small mt-2 mb-4 ml-4">
     - If you are interested in any of these, give me a shout!
