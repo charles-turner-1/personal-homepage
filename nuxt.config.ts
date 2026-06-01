@@ -1,9 +1,28 @@
+import {execSync} from "child_process";
+// Get git commit SHA
+const getGitCommitSha = () => {
+  try {
+    return execSync("git rev-parse HEAD").toString().trim();
+  } catch {
+    return "unknown";
+  }
+};
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   modules: ['@nuxt/ui', "@nuxt/content"],
   css: ['~/assets/css/main.css'],
+  app: {
+    baseURL: process.env.NODE_ENV === "production" ? "/personal-homepage/" : "/"
+  },
+  runtimeConfig: {
+    public: {
+      gitCommitSha: getGitCommitSha(),
+      buildTime: new Date().toISOString()
+    }
+  },
   content: {
     build: {
       markdown: {

@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-// Deployment information injected at build time
-declare const __GIT_COMMIT_SHA__: string;
-declare const __BUILD_TIME__: string;
+const config = useRuntimeConfig();
 
-const commitSha =
-  typeof __GIT_COMMIT_SHA__ !== "undefined" ? __GIT_COMMIT_SHA__ : null;
-const buildTime = typeof __BUILD_TIME__ !== "undefined" ? __BUILD_TIME__ : null;
+const commitSha = config.public.gitCommitSha;
+const buildTime = config.public.buildTime;
+
 const shortCommitSha = commitSha ? commitSha.substring(0, 7) : "";
 const commitUrl = commitSha
   ? `https://github.com/charles-turner-1/personal-homepage/commit/${commitSha}`
@@ -55,18 +53,36 @@ const copyCommitSha = async () => {
 </script>
 
 <template>
-  <UPopover class="flex items-center">
-  <UButton :label="`Commit: ${ commitSha }`" class="text-sm text-gray-900 dark:text-gray-100 mb-2"></UButton>
-      <template #content>
-<div class="p-3 max-w-md">
-      <div class="text-sm text-gray-900 dark:text-gray-100 mb-2">
-        <strong>Commit:</strong> {{ commitSha }}
+  <UPopover :content="{ side: 'bottom', align: 'end', sideOffset: 8 }">
+    <UButton
+      color="neutral"
+      variant="subtle"
+      size="sm"
+      class="inline-flex items-center"
+    >
+      <UIcon name="i-bi-github" class="mr-1" />
+      Commit: {{ shortCommitSha }}
+    </UButton>
+
+    <template #content>
+      <div class="p-3 flex flex-col gap-2 min-w-88 max-w-120">
+        <div class="text-sm text-gray-900 dark:text-gray-100 break-all">
+          <UIcon name="i-bi-github" class="mr-2" />
+          <strong>Commit:</strong>
+          {{ commitSha }}
+        </div>
+        <div v-if="buildTime" class="text-xs text-gray-600 dark:text-gray-400">
+          <strong>Built:</strong> {{ new Date(buildTime).toLocaleString() }}
+        </div>
+        <div class="pt-1">
+          <UButton
+            label="Copy SHA"
+            icon="i-lucide-copy"
+            size="xs"
+            @click="copyCommitSha"
+          />
+        </div>
       </div>
-      <div v-if="buildTime" class="text-xs text-gray-600 dark:text-gray-400 mb-3">
-        <strong>Built:</strong> {{ new Date(buildTime).toLocaleString() }}
-      </div>
-      <UButton label="Copy SHA" icon="i-lucide-copy" @click="copyCommitSha" class="w-full" />
-    </div>
-      </template>
+    </template>
   </UPopover>
 </template>

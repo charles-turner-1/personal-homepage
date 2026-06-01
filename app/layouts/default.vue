@@ -19,7 +19,7 @@ const items = computed<NavigationMenuItem[]>(() => [
         <UHeader :title="''">
             <UNavigationMenu :items="items" />
             <template #right>
-                <div class="flex items-center h-full gap-4">
+                <div class="flex items-center gap-4">
                     <GitCommit />
                 </div>
             </template>
