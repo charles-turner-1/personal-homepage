@@ -25,7 +25,7 @@ const items = computed<NavigationMenuItem[]>(() => [
 </script>
 <!-- Default layout template.  -->
 <template>
-  <div>
+  <div class="min-h-screen bg-default text-default">
     <UHeader :title="''">
       <UNavigationMenu :items="items" />
       <template #right>
@@ -37,12 +37,10 @@ const items = computed<NavigationMenuItem[]>(() => [
         <UNavigationMenu :items="items" orientation="vertical" class="mx-2.5" />
       </template>
     </UHeader>
-    <div class="bg-gray-50">
-      <UMain>
-        <div class="container text-center mx-auto px-6 py-6">
-          <slot />
-        </div>
-      </UMain>
-    </div>
+    <UMain>
+      <div class="container text-center mx-auto px-6 py-6">
+        <slot />
+      </div>
+    </UMain>
   </div>
 </template>
