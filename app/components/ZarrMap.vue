@@ -3,8 +3,11 @@ import { reactive, watch } from "vue";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useZarrMap, CLIM } from "@/composables/useZarrMap";
 
-import { usePosthog } from "@/composables/usePosthog";
-const { capture } = usePosthog();
+const posthog = usePostHog();
+
+function capture(event: string, properties?: Record<string, unknown>) {
+  posthog?.capture(event, properties);
+}
 
 const props = defineProps<{
   refSpec: Record<string, unknown>;
