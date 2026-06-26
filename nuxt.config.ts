@@ -12,7 +12,7 @@ const getGitCommitSha = () => {
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
-  modules: ["@nuxt/ui", "@nuxt/content"],
+  modules: ["@nuxt/ui", "@nuxt/content", "@posthog/nuxt"],
   css: ["~/assets/css/main.css"],
   app: {
     baseURL:
@@ -25,8 +25,13 @@ export default defineNuxtConfig({
       emailjsServiceId: process.env.NUXT_PUBLIC_EMAILJS_SERVICE_ID ?? "",
       emailjsTemplateId: process.env.NUXT_PUBLIC_EMAILJS_TEMPLATE_ID ?? "",
       emailjsPublicKey: process.env.NUXT_PUBLIC_EMAILJS_PUBLIC_KEY ?? "",
-      posthogKey: process.env.NUXT_PUBLIC_POSTHOG_KEY ?? "",
-      posthogHost: process.env.NUXT_PUBLIC_POSTHOG_HOST ?? "",
+    },
+  },
+  posthogConfig: {
+    publicKey: process.env.NUXT_PUBLIC_POSTHOG_KEY,
+    host: process.env.NUXT_PUBLIC_POSTHOG_HOST,
+    clientConfig: {
+      persistence: "memory",
     },
   },
   content: {

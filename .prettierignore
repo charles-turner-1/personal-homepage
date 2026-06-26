@@ -1,0 +1,5 @@
+app/assets/refs/
+dist/
+.nuxt/
+.output/
+node_modules/

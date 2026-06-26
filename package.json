@@ -17,11 +17,11 @@
     "@emailjs/browser": "^4.4.1",
     "@nuxt/content": "^3.14.0",
     "@nuxt/ui": "^4.8.1",
+    "@posthog/nuxt": "^1.7.77",
     "better-sqlite3": "^12.10.0",
     "maplibre": "^0.0.1-security",
     "maplibre-gl": "^5.24.0",
     "nuxt": "^4.4.6",
-    "posthog-js": "^1.376.4",
     "tailwindcss": "^4.3.0",
     "vue": "^3.5.34",
     "vue-router": "^5.0.7",
@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.111",
+    "@types/node": "^26.0.1",
     "prettier": "^3.8.3",
     "vue-tsc": "^3.3.3"
   }
