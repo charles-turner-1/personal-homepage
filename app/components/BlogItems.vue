@@ -1,6 +1,14 @@
 <script setup lang="ts">
 const posts = [
   {
+    title:
+      "The Blandification of Science was a Mistake",
+    date: "June 2026",
+    excerpt:
+      "An essay version of some of the ideas from my 2026 Scipy Talk: 'FAIRer Data: The case for data advertising in the era of Agentic AI",
+    href: "/blog/blandification-of-science",
+  },
+  {
     title: "Notes on chunking climated data 'optimally'",
     date: "June 2026",
     excerpt:
