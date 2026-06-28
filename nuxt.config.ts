@@ -20,6 +20,9 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
+      siteUrl:
+        process.env.NUXT_PUBLIC_SITE_URL ??
+        "https://charles-turner-1.github.io",
       gitCommitSha: getGitCommitSha(),
       buildTime: new Date().toISOString(),
       emailjsServiceId: process.env.NUXT_PUBLIC_EMAILJS_SERVICE_ID ?? "",
@@ -32,6 +35,11 @@ export default defineNuxtConfig({
     host: process.env.NUXT_PUBLIC_POSTHOG_HOST,
     clientConfig: {
       persistence: "memory",
+    },
+  },
+  nitro: {
+    prerender: {
+      routes: ["/feed.xml"],
     },
   },
   content: {

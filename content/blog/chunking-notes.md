@@ -1,3 +1,10 @@
+---
+title: "Principles for chunking climate model output"
+description: "Some rough principles for chunking climate model output without painting yourself into a performance corner later."
+date: "2026-06-01"
+author: "Charles Turner"
+---
+
 > This is a draft I wrote up containing some general principles for chunking climate model output. It's not really a finished product yet - just some thoughts about how to chunk climate model output in a way that avoids some of the common headaches. If you have any comments/suggestions/correction, please let me know - via the contact page on this site, or via an issue on the [Github Repository](https://github.com/charles-turner-1/NPCP-Chunk-guide)
 
 ---

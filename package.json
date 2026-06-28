@@ -8,6 +8,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
+    "lint": "npm run format:check && npm run typecheck",
     "typecheck": "nuxt typecheck",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

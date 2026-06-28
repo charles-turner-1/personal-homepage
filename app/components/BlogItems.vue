@@ -1,34 +1,54 @@
 <script setup lang="ts">
-const posts = [
-  {
-    title: "The Blandification of Science was a Mistake",
-    date: "June 2026",
-    excerpt:
-      "An essay version of some of the ideas from my 2026 Scipy Talk: 'FAIRer Data: The case for data advertising in the era of Agentic AI",
-    href: "/blog/blandification-of-science",
-  },
-  {
-    title: "Notes on chunking climated data 'optimally'",
-    date: "June 2026",
-    excerpt:
-      "Some notes on chunking strategies, drafted for NPCP chunking section. Written off the cuff, on the plane.",
-    href: "/blog/chunking-notes",
-  },
-  {
-    title:
-      "Virtualising & Distributing Data through Acacia (Pawsey) & Nirin (NCI)",
-    date: "April 2026",
-    excerpt:
-      "Playing around with virtualisation, data distribution and streaming with virtualizarr, icechunk, kerchunk.",
-    href: "/blog/virtualising-on-acacia",
-  },
-];
+type BlogPage = {
+  path?: string;
+  title?: string;
+  description?: string;
+  date?: string;
+  meta?: {
+    href?: string;
+    title?: string;
+    description?: string;
+    date?: string;
+  };
+};
+
+const { data: posts } = await useAsyncData("blog-posts", async () => {
+  const pages = (await queryCollection("content").all()) as BlogPage[];
+
+  return pages
+    .filter((page) => page.path?.startsWith("/blog/") && page.path !== "/blog")
+    .sort((a, b) => {
+      const aDate = a.date ?? a.meta?.date;
+      const bDate = b.date ?? b.meta?.date;
+      const aTime = aDate ? new Date(aDate).getTime() : 0;
+      const bTime = bDate ? new Date(bDate).getTime() : 0;
+
+      return bTime - aTime;
+    })
+    .map((page) => ({
+      href: page.meta?.href ?? page.path ?? "/blog",
+      title: page.title ?? page.meta?.title ?? "Untitled post",
+      description: page.description ?? page.meta?.description ?? "",
+      date: page.date ?? page.meta?.date,
+    }));
+});
+
+const formatPostDate = (value?: string) => {
+  if (!value) {
+    return "Draft";
+  }
+
+  return new Date(value).toLocaleDateString("en-AU", {
+    year: "numeric",
+    month: "long",
+  });
+};
 </script>
 
 <template>
   <div class="flex flex-col gap-4">
     <RouterLink
-      v-for="post in posts"
+      v-for="post in posts ?? []"
       :key="post.href"
       :to="post.href"
       class="flex flex-col gap-2 px-6 py-5 rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group"
@@ -36,7 +56,7 @@ const posts = [
       <div
         class="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide font-medium"
       >
-        {{ post.date }}
+        {{ formatPostDate(post.date) }}
       </div>
       <div
         class="text-sm font-semibold text-gray-800 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug"
@@ -44,7 +64,7 @@ const posts = [
         {{ post.title }}
       </div>
       <div class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-        {{ post.excerpt }}
+        {{ post.description }}
       </div>
     </RouterLink>
   </div>

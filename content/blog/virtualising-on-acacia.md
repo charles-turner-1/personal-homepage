@@ -1,3 +1,10 @@
+---
+title: "Virtualising & Distributing Data through Acacia (Pawsey) & Nirin (NCI)"
+description: "Notes from poking at virtualisation, object storage, and streaming richer climate datasets through browser-friendly catalogues."
+date: "2026-04-01"
+author: "Charles Turner"
+---
+
 # Virtualising & Distributing Data through Acacia (Pawsey) & Nirin (NCI)
 
 At AMOS 2026 (Hobart, February), we did a bunch of alpha user testing on a new tool we've been working on, [the ACCESS-NRI Interactive Data Catalogue](https://access-nri.github.io/interactive-data-catalogue/#/).
