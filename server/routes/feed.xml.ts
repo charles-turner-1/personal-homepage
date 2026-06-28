@@ -27,7 +27,9 @@ const parseFrontmatter = (source: string) => {
     return {} as Record<string, string>;
   }
 
-  const entries = match[1]
+  const frontmatterBlock = match[1] ?? "";
+
+  const entries = frontmatterBlock
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean)
@@ -39,7 +41,10 @@ const parseFrontmatter = (source: string) => {
       }
 
       const key = line.slice(0, separator).trim();
-      const value = line.slice(separator + 1).trim().replace(/^['"]|['"]$/g, "");
+      const value = line
+        .slice(separator + 1)
+        .trim()
+        .replace(/^['"]|['"]$/g, "");
 
       return [key, value] as const;
     })

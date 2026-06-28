@@ -1,19 +1,34 @@
 <script setup lang="ts">
+type BlogPage = {
+  path?: string;
+  title?: string;
+  description?: string;
+  date?: string;
+  meta?: {
+    href?: string;
+    title?: string;
+    description?: string;
+    date?: string;
+  };
+};
+
 const { data: posts } = await useAsyncData("blog-posts", async () => {
-  const pages = await queryCollection("content").all();
+  const pages = (await queryCollection("content").all()) as BlogPage[];
 
   return pages
     .filter((page) => page.path?.startsWith("/blog/") && page.path !== "/blog")
     .sort((a, b) => {
-      const aTime = a.date ? new Date(a.date).getTime() : 0;
-      const bTime = b.date ? new Date(b.date).getTime() : 0;
+      const aDate = a.date ?? a.meta?.date;
+      const bDate = b.date ?? b.meta?.date;
+      const aTime = aDate ? new Date(aDate).getTime() : 0;
+      const bTime = bDate ? new Date(bDate).getTime() : 0;
 
       return bTime - aTime;
     })
     .map((page) => ({
-      href: page.meta?.href ?? page.path,
-      title: page.title ?? page.meta?.title,
-      description: page.description ?? page.meta?.description,
+      href: page.meta?.href ?? page.path ?? "/blog",
+      title: page.title ?? page.meta?.title ?? "Untitled post",
+      description: page.description ?? page.meta?.description ?? "",
       date: page.date ?? page.meta?.date,
     }));
 });
