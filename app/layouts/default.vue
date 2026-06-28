@@ -2,6 +2,18 @@
 import type { NavigationMenuItem } from "@nuxt/ui";
 
 const route = useRoute();
+const config = useRuntimeConfig();
+
+useHead({
+  link: [
+    {
+      rel: "alternate",
+      type: "application/rss+xml",
+      title: "Charles Turner blog",
+      href: `${config.public.siteUrl}${config.app.baseURL}feed.xml`,
+    },
+  ],
+});
 
 const items = computed<NavigationMenuItem[]>(() => [
   { label: "Home", to: "/", active: route.path === "/" },

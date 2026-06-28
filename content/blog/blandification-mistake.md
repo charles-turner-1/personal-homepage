@@ -1,3 +1,11 @@
+---
+title: "The Blandification of Science was a Mistake"
+description: "An essay version of some of the ideas from my 2026 Scipy talk on FAIRer data, data advertising, and why scientific writing got too bland for its own good."
+date: "2026-06-15"
+author: "Charles Turner"
+href: "/blog/blandification-of-science"
+---
+
 # The Blandification of Science was a Mistake
 
 > _This is an essay version of some of the ideas from my 2026 Scipy Talk: 'FAIRer Data: The case for data advertising in the era of Agentic AI'_.
