@@ -132,7 +132,7 @@ Data advertising is about moving your dataset from the long, bland and static to
 
 I 100% agree with this statement. Just because something is in principle accessible by emailing you and asking for a copy, or obtaining login access to some computer system somewhere, that does not mean it is accessible in practice. But the cloud doesn't just give us an easy way to distribute datasets - it also gives us an easy way to advertise them.
 
-### Data advertising is wrapping the data with just enough fluff to make someone *actually* use it.
+### Data advertising is wrapping the data with just enough fluff to make someone _actually_ use it.
 
 **All you need is CORS**
 
@@ -216,7 +216,7 @@ You will find _the exact same data_ - because it's made of the same files. The d
 - No more learning intake - you probably already know how to click through a website. As you explore, the site generates the code you need to load it in Python.
 - Don't know what project a dataset requires? Don't worry - the page will pop that up.
 - Not sure why you're not getting multiple datasets and not one? All good - the catalogue will spell it out for you.
-- If you aren't already an active user of NCI, you probably don't even know what an ARE session is. If you've just come back from googling those things, you've just seen the barrier to entry. 
+- If you aren't already an active user of NCI, you probably don't even know what an ARE session is. If you've just come back from googling those things, you've just seen the barrier to entry.
 - In fact, if you looked at the python snippet above and though 'How the hell am I supposed to use that?', you've seen it too.
 - Not sure if Gadi even has the data you're after? No worries - you don't need to get yourself set up with an NCI account and join the right projects just to check now.
 
