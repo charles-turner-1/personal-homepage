@@ -16,7 +16,7 @@ This is for anyone who can't be bothered to read my rambling prose.
 1. Zarr is often touted as being incompatible with Lustre (and by extension HPC) because it creates too many inodes. __This isn't true__.
 2. Zarr stores with large shards _can_ serialise climate, weather (and anything else xarray-ish) with fewer inodes than an equivalent netCDF representation (if you deliberately design it this way).
 3. Zarr is cloud optimised, meaning its design avoids constant mucking around chasing file pointers. For a filesytem like Lustre which is really a datacentre in a trenchcoat, this is actually a better design than a traditional netCDF setup - provided you can manage your inodes.
-4. I built this functionality into [`intake-virtual-icechunk`](https://github.com/ACCESS-NRI/intake-virtual-icechunk), which takes an intake-esm datastore and wraps it up in a single icechunk store. Calling `.rechunk(shards="auto")` on the builder sizes each shard to roughly match one of your source files, so you end up with about as many inodes as you started with. If you want a cloud & HPC optimised data format, this might be worth looking at.
+4. I built this functionality into [`intake-virtual-icechunk`](https://github.com/ACCESS-NRI/intake-virtual-icechunk), which takes an intake-esm datastore and wraps it up in a single icechunk store. Calling `.rechunk(shards="auto")` on the builder sizes each shard to roughly match one of your source files, so you end up with a similar order of magnitude of inodes to what you started with (measure your store to check). If you want a cloud & HPC optimised data format, this might be worth looking at.
 5. There are no free lunches (yet?). Lustre optimising a Zarr store will make repeated writing to it horribly inefficient (in the naive case). With that said, most data of this kind is write-once read-forever.
 
 ### Cloud optimised excel spreadsheets - because why not?
@@ -96,14 +96,14 @@ Now, I sharded these files because an excel spreadsheet is not a serious choice 
 ::note
 It turns out this isn't necessarily true. My understanding is that this is being worked on in zarrs (and by extension might be exposed to python via zarrista). Basically, to make this happen, you need to write the single updated chunk to the end of the shard, update a pointer, and then orphan the previous chunk contents. 
 
-Claude tells me that Icechunk does something similar, but one level up: every chunk is its own object, and a manifest acts as the pointer, so an update writes a new chunk and orphans the old one (kept around for version history until it's garbage collected). The catch is that shards inside Icechunk are still treated as a single chunk, so it doesn't make writing more efficient, unfortunately. 
+Claude tells me that Icechunk can do something like this, one level up: its manifest stores a pointer (file, offset, length) to every chunk, and a single file can hold many chunks. An update writes the new chunk somewhere else, repoints the manifest, and orphans the old bytes (kept around for version history until they're garbage collected). The catch is that a regular Zarr shard inside Icechunk is still treated as one big chunk, so if you shard the Zarr way, you're back to rewriting the whole thing. 
 
 If someone understands this all better and wants to correct me, please do!
 ::
 
 ### Lustre works a lot like object storage, unless files are in the OS cache
 
-A lustre filesystem is a network filesystem that uses metadata servers to handle inodes. That's a lot of jargon, and to be frank I don't have a good mental model of how it maps into hardware. What it means though, is that if you're on a lustre system and you touch a file that hasn't been hit recently, you first make a network round trip to the metadata server to look the file up and find out where its data lives, then another to the storage servers to actually fetch it. That's closely analogous to an HTTP GET against an object store. Once it's cached locally, you can access it like a regular on-disk file on your laptop.
+A lustre filesystem is a network filesystem that uses metadata servers to handle inodes. That's a lot of jargon, and to be frank I don't have a good mental model of how it maps into hardware. What it means though, is that if you're on a lustre system and you touch a file that hasn't been hit recently, you first make a network round trip to the metadata server to look the file up and find out where its data lives, then another to the storage servers to actually fetch it. That's closely analogous to an HTTP GET against an object store. Once it's cached, later reads are a lot cheaper - though it's never quite a local disk, since the client has to coordinate with the servers whenever someone else might be touching the same file.
 
 
 ::note
@@ -111,7 +111,7 @@ I have a slightly better mental model for Ceph. Ceph uses a RADOS backend, and t
 ::
  
 ::note
-It's probably also worth thinking about the fact that the general advice for both Object Storage and Lustre is to avoid having hundreds of thousands of tiny objects. In an object store, it's because you pay the latency hit for every interaction. It's not quite so bad in Lustre - you only pay the latency hit the first time you touch each file - but it's the same story. This really just boils down, again, to lustre being a datacentre in a trenchcoat.
+It's probably also worth thinking about the fact that the general advice for both Object Storage and Lustre is to avoid having hundreds of thousands of tiny objects. In an object store, it's because you pay the latency hit for every interaction. It's not quite so bad in Lustre - caching takes the edge off repeat access - but every new file still costs a trip to the metadata server, so it's the same story. This really just boils down, again, to lustre being a datacentre in a trenchcoat.
 ::
 
 Let's ignore the specific details for now, and let's just pretend we want to open a climate dataset. Say it has been serialised as eight hundred netCDF files, one per quarter for 200 years (not unrealistic). So something like
@@ -149,18 +149,17 @@ Again - this ignores all the extra overhead from xarray constructing its represe
 
 ### Here are some benchmarks I made earlier
 
-__These are not benchmarks I made for this post.__ I had them lying around, [here](https://github.com/charles-turner-1/PawseyVirtualisationTests/blob/main/gadi/virtualisation-tests-nirin.ipynb). These were all virtualised, meaning I didn't even bother to reserialise everything to zarr either. The point is unchanged, because until you actually access data, zarr doesn't need to touch the individual chunk files:
+__These are not benchmarks I made for this post.__ I had them lying around, [here](https://github.com/charles-turner-1/PawseyVirtualisationTests/blob/main/gadi/virtualisation-tests-nirin.ipynb).
 
-On NCI's Gadi HPC system, there is [this dataset](https://access-nri.github.io/interactive-data-catalogue/#/datastore/cj877?file_id_filter=atmos.1day.bnds:2.depth:6.lat:144.lon:192).
+On NCI's Gadi HPC system, there is [this dataset](https://access-nri.github.io/interactive-data-catalogue/#/datastore/cj877?file_id_filter=atmos.1day.bnds:2.depth:6.lat:144.lon:192), daily atmospheric data split across a lot of netCDF files. For the benchmark I took the first 500 of them.
 
-It contains 6000 files, daily atmospheric data. 
+If we want to just _open_ those 500 files, with a 48 worker dask cluster, it takes 2 minutes and 37 seconds.
 
-If we want to just _open_ that dataset, with a 48 worker dask cluster, it takes 2 minutes and 48 seconds.
+That's over two and a half minutes of your user wondering whether their Jupyter Notebook is actually running, and 500 file opens for your metadata server to deal with - just to see what's in the dataset, before reading any actual data.
 
-After virtualising? With no dask cluster, we can do it in 1.47s. 
+Now compare that to a virtual Icechunk store indexing exactly the same 500 files, sitting in a separate bucket in NCI's object storage. Opening it from the same session, over a throttled connection of about 10 Mbps (1.25 MB/s), takes 1.47 seconds, with no dask cluster. That's over 100x faster, and the metadata server doesn't get touched at all until you actually load some data. Put the store on disk next to the data and I'd expect it to be quicker still.
 
-
-Now, your user doesn't spend almost 3 minutes wondering whether their Jupyter Notebook is actually running, and your metadata server goes from dealing with 6000 file opens to a couple - a 99.97% reduction in that instance. And you don't even have to increase the number of inodes to make this zarr, even if you don't virtualise your dataset. In fact, you can even decrease them too.
+And you don't have to blow up your inode count to get this. Even if you reserialise to sharded zarr rather than virtualising, sensible shard sizes leave you with a similar number of inodes to what you started with, not hundreds of thousands.
 
 
 
